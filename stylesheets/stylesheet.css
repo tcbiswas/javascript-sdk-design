@@ -230,7 +230,15 @@ a {
   font-weight: bold; }
 
 .site-footer-credits {
+  display: block;
   color: #819198; }
+
+.site-footer-domain {
+  display: block;
+  color: #819198; }
+
+.site-footer-domain img {
+  vertical-align: bottom; }
 
 @media screen and (min-width: 64em) {
   .site-footer {

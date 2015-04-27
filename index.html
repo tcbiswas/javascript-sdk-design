@@ -25,13 +25,13 @@
 <h2>
 <a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction</h2>
 
-<p>This guide gives you an introduction to develop a javascript sdk 
+<p>This guide gives you an introduction to develop a javascript sdk
 on desktop and mobile web in different platforms and browsers (&lt;99.99% I might skip some browsers). </p>
 
 <p>Since I didn't find out a better documentation for the javascript sdk,
 I'm here to collect and note down the knowledges from my experiences.</p>
 
-<p>Feel free to edit it if you think there's a better design methodology or 
+<p>Feel free to edit it if you think there's a better design methodology or
 any others I didn't mention here.</p>
 
 <p><em>(inspired by <a href="https://github.com/interagent/http-api-design">http-api-design</a>)</em></p>
@@ -116,18 +116,18 @@ any others I didn't mention here.</p>
 <h2>
 <a id="design-philosophy" class="anchor" href="#design-philosophy" aria-hidden="true"><span class="octicon octicon-link"></span></a>Design Philosophy</h2>
 
-<p>It depends on your purpose of your SDK service and usage, 
+<p>It depends on your purpose of your SDK service and usage,
 but there must be <strong>native</strong>, <strong>short</strong>, <strong>fast</strong>, <strong>clean</strong> and <strong>readable</strong>.</p>
 
-<p>Written in native javascript code, compiler language like 
+<p>Written in native javascript code, compiler language like
 livescript, coffeescript, typescript and others are not recommend.
 There must be a better way to write your own javascript code in native faster than others.</p>
 
-<p>Please don't involve jQuery in your SDK unless it's really important, 
-you can have other jQuery-like libraries, zepto.js, for the DOM manipulation. 
+<p>Please don't involve jQuery in your SDK unless it's really important,
+you can have other jQuery-like libraries, zepto.js, for the DOM manipulation.
 Or if you need the http ajax request, use other light library like <code>window.fetch</code>.</p>
 
-<p>Once every SDK version released, make sure that it can be fitted into older and newer SDK version in the future. 
+<p>Once every SDK version released, make sure that it can be fitted into older and newer SDK version in the future.
 Therefore, remember to write your <strong>Documentation</strong> for your SDK and comment for your code.</p>
 
 <h2>
@@ -167,7 +167,7 @@ We want to optimize the user experience on the website as we don't want our SDK 
 <p>Asynchronous:</p>
 
 <pre><code> |----A-----|
-    |-----B-----------| 
+    |-----B-----------|
         |-------C------|
 </code></pre>
 
@@ -196,9 +196,9 @@ you cannot execute your SDK function which script written within the page.</p>
   SDKName(<span class="pl-s"><span class="pl-pds">'</span>some arguments<span class="pl-pds">'</span></span>);
 <span class="pl-k">&lt;</span>/script<span class="pl-k">&gt;</span></pre></div>
 
-<p>The result will lead to undefined because the <code>SDKName()</code> execute before the script loaded, 
-therefore we should do some tricks and make sure the script execute successfully. 
-The event will store in the <code>SDKName.q</code> queue array, 
+<p>The result will lead to undefined because the <code>SDKName()</code> execute before the script loaded,
+therefore we should do some tricks and make sure the script execute successfully.
+The event will store in the <code>SDKName.q</code> queue array,
 your SDK should handle and execute <code>SDKName.q</code> and reinitial the namespace <code>SDKName</code>.</p>
 
 <div class="highlight highlight-js"><pre><span class="pl-k">&lt;</span>script<span class="pl-k">&gt;</span>
@@ -222,7 +222,7 @@ your SDK should handle and execute <code>SDKName.q</code> and reinitial the name
 <h2>
 <a id="sdk-versioning" class="anchor" href="#sdk-versioning" aria-hidden="true"><span class="octicon octicon-link"></span></a>SDK Versioning</h2>
 
-<p>Please avoid using your special case for version like <code>brand-v&lt;timestamp&gt;.js</code> <code>brand-v&lt;datetime&gt;.js</code> <code>brand-v1-v2.js</code>, 
+<p>Please avoid using your special case for version like <code>brand-v&lt;timestamp&gt;.js</code> <code>brand-v&lt;datetime&gt;.js</code> <code>brand-v1-v2.js</code>,
 it may cause the developer who use the SDK on confusing which is the latest version. </p>
 
 <p>Use <a href="http://semver.org">Semantic Versioning</a> to define your SDK Version in the form "MAJOR.MINOR.PATCH".
@@ -257,14 +257,14 @@ http://xxx.com/sdk-experimental.js
 <h2>
 <a id="changelog-document" class="anchor" href="#changelog-document" aria-hidden="true"><span class="octicon octicon-link"></span></a>Changelog Document</h2>
 
-<p>You should notice that your SDK user will not know if you upgrade your sdk without announcement. 
-Remember to write a changelog to document your major, minor and even bug fix change. 
+<p>You should notice that your SDK user will not know if you upgrade your sdk without announcement.
+Remember to write a changelog to document your major, minor and even bug fix change.
 It will be a good developer experience if we can trace the changing API for the SDK.</p>
 
 <h2>
 <a id="namespace" class="anchor" href="#namespace" aria-hidden="true"><span class="octicon octicon-link"></span></a>Namespace</h2>
 
-<p>You should not define more than one global namespace in your SDK and 
+<p>You should not define more than one global namespace in your SDK and
 prevent using the common word for your namespace to avoid collision with other libraries.</p>
 
 <p>On your SDK mainland, you should use <code>(function () { ... })()</code> to wrap all your source.</p>
@@ -277,8 +277,8 @@ prevent using the common word for your namespace to avoid collision with other l
 
 <p>The domain scope of using cookie is quite complex while involving the <code>subdomain</code> and <code>path</code>.</p>
 
-<p>For <code>path=/</code>, 
-you have a cookie <code>first=value1</code> in domain <code>http://github.com</code>, 
+<p>For <code>path=/</code>,
+you have a cookie <code>first=value1</code> in domain <code>http://github.com</code>,
 another cookie <code>second=value2</code> in domain <code>http://sub.github.com</code></p>
 
 <table>
@@ -364,13 +364,13 @@ and cookie <code>third=value3</code> in domain <code>http://sub.github.com</code
 <h3>
 <a id="session" class="anchor" href="#session" aria-hidden="true"><span class="octicon octicon-link"></span></a>Session</h3>
 
-<p>It's important to know that Javascript is not possible to write Session, 
+<p>It's important to know that Javascript is not possible to write Session,
 please refer to the server side team to implement Session.</p>
 
 <h3>
 <a id="localstorage" class="anchor" href="#localstorage" aria-hidden="true"><span class="octicon octicon-link"></span></a>LocalStorage</h3>
 
-<p>Stores data with no expiration date, storage limit is far larger (at least 5MB) and 
+<p>Stores data with no expiration date, storage limit is far larger (at least 5MB) and
 information is never transferred to the server.</p>
 
 <p>It's good to know that each localStorage from <code>http</code> and <code>https</code> in same domain aren't shared.
@@ -414,8 +414,8 @@ You can create an iframe inside the website and use <code>postMessage</code> to 
 <h2>
 <a id="request" class="anchor" href="#request" aria-hidden="true"><span class="octicon octicon-link"></span></a>Request</h2>
 
-<p>The communication between our SDK and Server is using Ajax Request, 
-as we know we can use jQuery ajax http request to communicate with Server, 
+<p>The communication between our SDK and Server is using Ajax Request,
+as we know we can use jQuery ajax http request to communicate with Server,
 but there's a better solution to implement it.</p>
 
 <h3>
@@ -484,7 +484,7 @@ form.<span class="pl-c1">submit</span>();</pre></div>
 
         form.<span class="pl-c1">submit</span>();
         <span class="pl-c">// remove the iframe</span>
-        <span class="pl-c1">setTimeout</span>( <span class="pl-k">function</span>(){ 
+        <span class="pl-c1">setTimeout</span>( <span class="pl-k">function</span>(){
             removeIframe(iframe);
         }, <span class="pl-c1">500</span>);
     };
@@ -578,10 +578,13 @@ parser.<span class="pl-c1">hostname</span>; <span class="pl-c">// =&gt; "github.
 
       <footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/huei90/javascript-sdk-design">Javascript-sdk-design</a> is maintained by <a href="https://github.com/huei90">huei90</a>.</span>
-
+        <span class="site-footer-domain">Domain is maintained by
+        <a href="http://js.org" target="_blank" title="JS.ORG | JavaScript Community">
+          <img src="http://logo.js.org/dark_horz.png" width="50" alt="JS.ORG Logo"/>
+        </a>
+        </span>
         <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
       </footer>
-
     </section>
 
             <script type="text/javascript">
@@ -597,4 +600,3 @@ parser.<span class="pl-c1">hostname</span>; <span class="pl-c">// =&gt; "github.
 
   </body>
 </html>
-
