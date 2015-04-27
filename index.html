@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Javascript-sdk-design by huei90</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Javascript-sdk-design</h1>
+      <h2 class="project-tagline">Javascript SDK design guide extracted from work and personal experience</h2>
+      <a href="https://github.com/huei90/javascript-sdk-design" class="btn">View on GitHub</a>
+      <a href="https://github.com/huei90/javascript-sdk-design/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/huei90/javascript-sdk-design/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="javascript-sdk-design-guide" class="anchor" href="#javascript-sdk-design-guide" aria-hidden="true"><span class="octicon octicon-link"></span></a>Javascript SDK Design Guide</h1>
+
+<h2>
+<a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction</h2>
+
+<p>This guide gives you an introduction to develop a javascript sdk 
+on desktop and mobile web in different platforms and browsers (&lt;99.99% I might skip some browsers). </p>
+
+<p>Since I didn't find out a better documentation for the javascript sdk,
+I'm here to collect and note down the knowledges from my experiences.</p>
+
+<p>Feel free to edit it if you think there's a better design methodology or 
+any others I didn't mention here.</p>
+
+<p><em>(inspired by <a href="https://github.com/interagent/http-api-design">http-api-design</a>)</em></p>
+
+<h2>
+<a id="content" class="anchor" href="#content" aria-hidden="true"><span class="octicon octicon-link"></span></a>Content</h2>
+
+<ul>
+<li><a href="#what-is-sdk">What is SDK</a></li>
+<li><a href="#design-philosophy">Design Philosophy</a></li>
+<li>
+<a href="#include-the-sdk">Include the SDK</a>
+
+<ul>
+<li><a href="#asynchronous-syntax">Asynchronous Syntax</a></li>
+<li><a href="#traditional-syntax">Traditional Syntax</a></li>
+<li><a href="#comparison">Comparison</a></li>
+<li><a href="#problem-of-asynchronous">Problem of Asynchronous</a></li>
+</ul>
+</li>
+<li><a href="#sdk-versioning">SDK Versioning</a></li>
+<li><a href="#changelog-document">Changelog Document</a></li>
+<li><a href="#namespace">Namespace</a></li>
+<li>
+<a href="#storage-mechanism">Storage Mechanism</a>
+
+<ul>
+<li>
+<a href="#cookie">Cookie</a>
+
+<ul>
+<li><a href="#check-cookie-writable">Check Cookie Writable</a></li>
+<li><a href="#check-third-party-cookie-writable">Check Third Party Cookie Writable</a></li>
+</ul>
+</li>
+<li><a href="#session">Session</a></li>
+<li>
+<a href="#localstorage">LocalStorage</a>
+
+<ul>
+<li><a href="#check-localstorage-writable">Check LocalStorage Writable</a></li>
+</ul>
+</li>
+<li>
+<a href="#sessionstorage">SessionStorage</a>
+
+<ul>
+<li><a href="#check-sessionstorage-writable">Check SessionStorage Writable</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<a href="#request">Request</a>
+
+<ul>
+<li><a href="#image-beacon">Image Beacon</a></li>
+<li><a href="#single-post">Single Post</a></li>
+<li><a href="#multiple-post">Multiple Post</a></li>
+<li><a href="#iframe">Iframe</a></li>
+<li><a href="#xmlhttprequest">XMLHttpRequest</a></li>
+</ul>
+</li>
+<li>
+<a href="#component-of-uri">Component of URI</a>
+
+<ul>
+<li><a href="#parsing-uri">Parsing URI</a></li>
+</ul>
+</li>
+<li><a href="#book-to-read">Book to Read</a></li>
+<li><a href="#reference">Reference</a></li>
+</ul>
+
+<h2>
+<a id="what-is-sdk" class="anchor" href="#what-is-sdk" aria-hidden="true"><span class="octicon octicon-link"></span></a>What is SDK</h2>
+
+<p>I know it's very common, but it is.</p>
+
+<p>"Short for <strong>software development kit</strong>, a programming package that enables a programmer to develop applications for a specific platform. Typically an SDK includes one or more APIs, programming tools, and documentation."</p>
+
+<h2>
+<a id="design-philosophy" class="anchor" href="#design-philosophy" aria-hidden="true"><span class="octicon octicon-link"></span></a>Design Philosophy</h2>
+
+<p>It depends on your purpose of your SDK service and usage, 
+but there must be <strong>native</strong>, <strong>short</strong>, <strong>fast</strong>, <strong>clean</strong> and <strong>readable</strong>.</p>
+
+<p>Written in native javascript code, compiler language like 
+livescript, coffeescript, typescript and others are not recommend.
+There must be a better way to write your own javascript code in native faster than others.</p>
+
+<p>Please don't involve jQuery in your SDK unless it's really important, 
+you can have other jQuery-like libraries, zepto.js, for the DOM manipulation. 
+Or if you need the http ajax request, use other light library like <code>window.fetch</code>.</p>
+
+<p>Once every SDK version released, make sure that it can be fitted into older and newer SDK version in the future. 
+Therefore, remember to write your <strong>Documentation</strong> for your SDK and comment for your code.</p>
+
+<h2>
+<a id="include-the-sdk" class="anchor" href="#include-the-sdk" aria-hidden="true"><span class="octicon octicon-link"></span></a>Include the SDK</h2>
+
+<p>You are suggest to use <strong>Asynchrnonous Syntax</strong> for your script loaded.
+We want to optimize the user experience on the website as we don't want our SDK library interfere the main web loaded.</p>
+
+<h3>
+<a id="asynchronous-syntax" class="anchor" href="#asynchronous-syntax" aria-hidden="true"><span class="octicon octicon-link"></span></a>Asynchronous Syntax</h3>
+
+<div class="highlight highlight-html"><pre><span class="pl-s1">&lt;<span class="pl-ent">script</span>&gt;</span>
+<span class="pl-s1">  (<span class="pl-k">function</span> () {</span>
+<span class="pl-s1">    <span class="pl-k">var</span> s <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>script<span class="pl-pds">'</span></span>);</span>
+<span class="pl-s1">    s.<span class="pl-c1">type</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>text/javascript<span class="pl-pds">'</span></span>;</span>
+<span class="pl-s1">    s.async <span class="pl-k">=</span> <span class="pl-c1">true</span>;</span>
+<span class="pl-s1">    s.<span class="pl-c1">src</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://xxx.com/sdk.js<span class="pl-pds">'</span></span>;</span>
+<span class="pl-s1">    <span class="pl-k">var</span> x <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">getElementsByTagName</span>(<span class="pl-s"><span class="pl-pds">'</span>script<span class="pl-pds">'</span></span>)[<span class="pl-c1">0</span>];</span>
+<span class="pl-s1">    x.<span class="pl-c1">parentNode</span>.<span class="pl-c1">insertBefore</span>(s, x);</span>
+<span class="pl-s1">  })();</span>
+<span class="pl-s1">&lt;/<span class="pl-ent">script</span>&gt;</span></pre></div>
+
+<p>Target on modern browser, you can use <code>async</code>.</p>
+
+<div class="highlight highlight-html"><pre>&lt;<span class="pl-ent">script</span> <span class="pl-e">async</span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>http://xxx.com/sdk.js<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">script</span>&gt;</pre></div>
+
+<h3>
+<a id="traditional-syntax" class="anchor" href="#traditional-syntax" aria-hidden="true"><span class="octicon octicon-link"></span></a>Traditional Syntax</h3>
+
+<div class="highlight highlight-html"><pre>&lt;<span class="pl-ent">script</span> <span class="pl-e">type</span>=<span class="pl-s"><span class="pl-pds">"</span>text/javascript<span class="pl-pds">"</span></span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>http://xxx.com/sdk.js<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">script</span>&gt;</pre></div>
+
+<h3>
+<a id="comparison" class="anchor" href="#comparison" aria-hidden="true"><span class="octicon octicon-link"></span></a>Comparison</h3>
+
+<p>Here's the simple graph to show the differentiate between Asynchronous and Traditional Syntax.</p>
+
+<p>Asynchronous:</p>
+
+<pre><code> |----A-----|
+    |-----B-----------| 
+        |-------C------|
+</code></pre>
+
+<p>Synchronous:</p>
+
+<pre><code>|----A-----||-----B-----------||-------C------|
+</code></pre>
+
+<h3>
+<a id="problem-of-asynchronous" class="anchor" href="#problem-of-asynchronous" aria-hidden="true"><span class="octicon octicon-link"></span></a>Problem of Asynchronous</h3>
+
+<p>When you are using Asynchronous,
+you cannot execute your SDK function which script written within the page.</p>
+
+<div class="highlight highlight-js"><pre><span class="pl-k">&lt;</span>script<span class="pl-k">&gt;</span>
+  (<span class="pl-k">function</span> () {
+    <span class="pl-k">var</span> s <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>script<span class="pl-pds">'</span></span>);
+    s.<span class="pl-c1">type</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>text/javascript<span class="pl-pds">'</span></span>;
+    s.async <span class="pl-k">=</span> <span class="pl-c1">true</span>;
+    s.<span class="pl-c1">src</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://xxx.com/sdk.js<span class="pl-pds">'</span></span>;
+    <span class="pl-k">var</span> x <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">getElementsByTagName</span>(<span class="pl-s"><span class="pl-pds">'</span>script<span class="pl-pds">'</span></span>)[<span class="pl-c1">0</span>];
+    x.<span class="pl-c1">parentNode</span>.<span class="pl-c1">insertBefore</span>(s, x);
+  })();
+
+  <span class="pl-c">// execute your script immediately here</span>
+  SDKName(<span class="pl-s"><span class="pl-pds">'</span>some arguments<span class="pl-pds">'</span></span>);
+<span class="pl-k">&lt;</span>/script<span class="pl-k">&gt;</span></pre></div>
+
+<p>The result will lead to undefined because the <code>SDKName()</code> execute before the script loaded, 
+therefore we should do some tricks and make sure the script execute successfully. 
+The event will store in the <code>SDKName.q</code> queue array, 
+your SDK should handle and execute <code>SDKName.q</code> and reinitial the namespace <code>SDKName</code>.</p>
+
+<div class="highlight highlight-js"><pre><span class="pl-k">&lt;</span>script<span class="pl-k">&gt;</span>
+  (<span class="pl-k">function</span> () {
+    <span class="pl-c">// add a queue event here</span>
+    SDKName <span class="pl-k">=</span> SDKName <span class="pl-k">||</span> <span class="pl-k">function</span> () {
+      (SDKName.q <span class="pl-k">=</span> SDKName.q <span class="pl-k">||</span> []).<span class="pl-c1">push</span>(arguments);
+    };
+    <span class="pl-k">var</span> s <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>script<span class="pl-pds">'</span></span>);
+    s.<span class="pl-c1">type</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>text/javascript<span class="pl-pds">'</span></span>;
+    s.async <span class="pl-k">=</span> <span class="pl-c1">true</span>;
+    s.<span class="pl-c1">src</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://xxx.com/sdk.js<span class="pl-pds">'</span></span>;
+    <span class="pl-k">var</span> x <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">getElementsByTagName</span>(<span class="pl-s"><span class="pl-pds">'</span>script<span class="pl-pds">'</span></span>)[<span class="pl-c1">0</span>];
+    x.<span class="pl-c1">parentNode</span>.<span class="pl-c1">insertBefore</span>(s, x);
+  })();
+
+  <span class="pl-c">// execute your script immediately here</span>
+  SDKName(<span class="pl-s"><span class="pl-pds">'</span>some arguments<span class="pl-pds">'</span></span>);
+<span class="pl-k">&lt;</span>/script<span class="pl-k">&gt;</span></pre></div>
+
+<h2>
+<a id="sdk-versioning" class="anchor" href="#sdk-versioning" aria-hidden="true"><span class="octicon octicon-link"></span></a>SDK Versioning</h2>
+
+<p>Please avoid using your special case for version like <code>brand-v&lt;timestamp&gt;.js</code> <code>brand-v&lt;datetime&gt;.js</code> <code>brand-v1-v2.js</code>, 
+it may cause the developer who use the SDK on confusing which is the latest version. </p>
+
+<p>Use <a href="http://semver.org">Semantic Versioning</a> to define your SDK Version in the form "MAJOR.MINOR.PATCH".
+Version in <code>v1.0.0</code> <code>v1.5.0</code> <code>v2.0.0</code> is easier for them to trace and search for the changelog documentation.</p>
+
+<p>Normally, we can have different ways to state the SDK version, it depends on your service and design.</p>
+
+<p>Using Query String path.</p>
+
+<pre><code>http://xxx.com/sdk.js?v=1.0.0
+</code></pre>
+
+<p>Using the Folder Naming.</p>
+
+<pre><code>http://xxx.com/v1.0.0/sdk.js
+</code></pre>
+
+<p>Using hostname (subdomain).</p>
+
+<pre><code>http://v1.xxx.com/sdk.js
+</code></pre>
+
+<p>For the futher development, you are advised to use  <code>stable</code> <code>unstable</code> <code>alpha</code> <code>latest</code> <code>experimental</code> version.</p>
+
+<pre><code>http://xxx.com/sdk-stable.js
+http://xxx.com/sdk-unstable.js
+http://xxx.com/sdk-alpha.js
+http://xxx.com/sdk-latest.js
+http://xxx.com/sdk-experimental.js
+</code></pre>
+
+<h2>
+<a id="changelog-document" class="anchor" href="#changelog-document" aria-hidden="true"><span class="octicon octicon-link"></span></a>Changelog Document</h2>
+
+<p>You should notice that your SDK user will not know if you upgrade your sdk without announcement. 
+Remember to write a changelog to document your major, minor and even bug fix change. 
+It will be a good developer experience if we can trace the changing API for the SDK.</p>
+
+<h2>
+<a id="namespace" class="anchor" href="#namespace" aria-hidden="true"><span class="octicon octicon-link"></span></a>Namespace</h2>
+
+<p>You should not define more than one global namespace in your SDK and 
+prevent using the common word for your namespace to avoid collision with other libraries.</p>
+
+<p>On your SDK mainland, you should use <code>(function () { ... })()</code> to wrap all your source.</p>
+
+<h2>
+<a id="storage-mechanism" class="anchor" href="#storage-mechanism" aria-hidden="true"><span class="octicon octicon-link"></span></a>Storage Mechanism</h2>
+
+<h3>
+<a id="cookie" class="anchor" href="#cookie" aria-hidden="true"><span class="octicon octicon-link"></span></a>Cookie</h3>
+
+<p>The domain scope of using cookie is quite complex while involving the <code>subdomain</code> and <code>path</code>.</p>
+
+<p>For <code>path=/</code>, 
+you have a cookie <code>first=value1</code> in domain <code>http://github.com</code>, 
+another cookie <code>second=value2</code> in domain <code>http://sub.github.com</code></p>
+
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center"><a href="http://github.com">http://github.com</a></th>
+<th align="center"><a href="http://sub.github.com">http://sub.github.com</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">first=value1</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td align="center">second=value2</td>
+<td align="center">✘</td>
+<td align="center">✓</td>
+</tr>
+</tbody>
+</table>
+
+<p>You have a cookie <code>first=value1</code> in domain <code>http://github.com</code>,
+cookie <code>second=value2</code> in domain path <code>http://github.com/path1</code>
+and cookie <code>third=value3</code> in domain <code>http://sub.github.com</code>,</p>
+
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center"><a href="http://github.com">http://github.com</a></th>
+<th align="center"><a href="http://github.com/path1">http://github.com/path1</a></th>
+<th align="center"><a href="http://sub.github.com">http://sub.github.com</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">first=value1</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td align="center">second=value2</td>
+<td align="center">✘</td>
+<td align="center">✓</td>
+<td align="center">✘</td>
+</tr>
+<tr>
+<td align="center">third=value3</td>
+<td align="center">✘</td>
+<td align="center">✘</td>
+<td align="center">✓</td>
+</tr>
+</tbody>
+</table>
+
+<h4>
+<a id="check-cookie-writable" class="anchor" href="#check-cookie-writable" aria-hidden="true"><span class="octicon octicon-link"></span></a>Check Cookie Writable</h4>
+
+<p>Given a domain (Default as current hostname), check whether the cookie is writable.</p>
+
+<div class="highlight highlight-js"><pre><span class="pl-k">var</span> <span class="pl-en">checkCookieWritable</span> <span class="pl-k">=</span> <span class="pl-k">function</span>(<span class="pl-smi">domain</span>) {
+    <span class="pl-k">try</span> {
+        <span class="pl-c">// Create cookie</span>
+        <span class="pl-c1">document</span>.<span class="pl-c1">cookie</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>cookietest=1<span class="pl-pds">'</span></span> <span class="pl-k">+</span> (domain <span class="pl-k">?</span> <span class="pl-s"><span class="pl-pds">'</span>; domain=<span class="pl-pds">'</span></span> <span class="pl-k">+</span> domain <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>);
+        <span class="pl-k">var</span> ret <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">cookie</span>.<span class="pl-c1">indexOf</span>(<span class="pl-s"><span class="pl-pds">'</span>cookietest=<span class="pl-pds">'</span></span>) <span class="pl-k">!=</span> <span class="pl-k">-</span><span class="pl-c1">1</span>;
+        <span class="pl-c">// Delete cookie</span>
+        <span class="pl-c1">document</span>.<span class="pl-c1">cookie</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT<span class="pl-pds">'</span></span> <span class="pl-k">+</span> (domain <span class="pl-k">?</span> <span class="pl-s"><span class="pl-pds">'</span>; domain=<span class="pl-pds">'</span></span> <span class="pl-k">+</span> domain <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>);
+        <span class="pl-k">return</span> ret;
+    } <span class="pl-k">catch</span> (e) {
+        <span class="pl-k">return</span> <span class="pl-c1">false</span>;
+    }
+};</pre></div>
+
+<h4>
+<a id="check-third-party-cookie-writable" class="anchor" href="#check-third-party-cookie-writable" aria-hidden="true"><span class="octicon octicon-link"></span></a>Check Third Party Cookie Writable</h4>
+
+<p>It's impossible to check only using client side javascript, you need a server to do that. (<a href="https://dl.dropboxusercontent.com/u/105727/web/3rd/third-party-cookies.html">Example</a>)</p>
+
+<h3>
+<a id="session" class="anchor" href="#session" aria-hidden="true"><span class="octicon octicon-link"></span></a>Session</h3>
+
+<p>It's important to know that Javascript is not possible to write Session, 
+please refer to the server side team to implement Session.</p>
+
+<h3>
+<a id="localstorage" class="anchor" href="#localstorage" aria-hidden="true"><span class="octicon octicon-link"></span></a>LocalStorage</h3>
+
+<p>Stores data with no expiration date, storage limit is far larger (at least 5MB) and 
+information is never transferred to the server.</p>
+
+<p>It's good to know that each localStorage from <code>http</code> and <code>https</code> in same domain aren't shared.
+You can create an iframe inside the website and use <code>postMessage</code> to pass the value to others. <a href="http://stackoverflow.com/questions/10502469/is-there-any-workaround-to-make-use-of-html5-localstorage-on-both-http-and-https">HOW TO?</a></p>
+
+<h4>
+<a id="check-localstorage-writable" class="anchor" href="#check-localstorage-writable" aria-hidden="true"><span class="octicon octicon-link"></span></a>Check LocalStorage Writable</h4>
+
+<p>window.localStorage is not support in every browser, SDK should check available before using it.</p>
+
+<div class="highlight highlight-js"><pre><span class="pl-k">var</span> <span class="pl-en">testCanLocalStorage</span> <span class="pl-k">=</span> <span class="pl-k">function</span>() {
+   <span class="pl-k">var</span> mod <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>modernizr<span class="pl-pds">'</span></span>;
+   <span class="pl-k">try</span> {
+       localStorage.setItem(mod, mod);
+       localStorage.removeItem(mod);
+       <span class="pl-k">return</span> <span class="pl-c1">true</span>;
+   } <span class="pl-k">catch</span> (e) {
+       <span class="pl-k">return</span> <span class="pl-c1">false</span>;
+   }
+};</pre></div>
+
+<h3>
+<a id="session-storage" class="anchor" href="#session-storage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Session Storage</h3>
+
+<p>Stores data for one session (data is lost when the tab is closed).</p>
+
+<h3>
+<a id="check-sessionstorage-writable" class="anchor" href="#check-sessionstorage-writable" aria-hidden="true"><span class="octicon octicon-link"></span></a>Check SessionStorage Writable</h3>
+
+<div class="highlight highlight-js"><pre><span class="pl-k">var</span> <span class="pl-en">checkCanSessionStorage</span> <span class="pl-k">=</span> <span class="pl-k">function</span>() {
+  <span class="pl-k">var</span> mod <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>modernizr<span class="pl-pds">'</span></span>;
+  <span class="pl-k">try</span> {
+    sessionStorage.setItem(mod, mod);
+    sessionStorage.removeItem(mod);
+    <span class="pl-k">return</span> <span class="pl-c1">true</span>;
+  } <span class="pl-k">catch</span> (e) {
+    <span class="pl-k">return</span> <span class="pl-c1">false</span>;
+  }
+}</pre></div>
+
+<h2>
+<a id="request" class="anchor" href="#request" aria-hidden="true"><span class="octicon octicon-link"></span></a>Request</h2>
+
+<p>The communication between our SDK and Server is using Ajax Request, 
+as we know we can use jQuery ajax http request to communicate with Server, 
+but there's a better solution to implement it.</p>
+
+<h3>
+<a id="image-beacon" class="anchor" href="#image-beacon" aria-hidden="true"><span class="octicon octicon-link"></span></a>Image Beacon</h3>
+
+<p>Use the Image Beacon to ask browser to perform a method GET Request to get an Image.</p>
+
+<div class="highlight highlight-js"><pre>(<span class="pl-k">new</span> <span class="pl-en">Image</span>()).<span class="pl-c1">src</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://xxxxx.com/collect?id=1111<span class="pl-pds">'</span></span>;</pre></div>
+
+<h3>
+<a id="single-post" class="anchor" href="#single-post" aria-hidden="true"><span class="octicon octicon-link"></span></a>Single Post</h3>
+
+<p>Use the native form element method POST to send a key value.</p>
+
+<div class="highlight highlight-js"><pre><span class="pl-k">var</span> form <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>form<span class="pl-pds">'</span></span>);
+<span class="pl-k">var</span> input <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>input<span class="pl-pds">'</span></span>);
+
+form.<span class="pl-c1">style</span>.<span class="pl-c1">display</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>none<span class="pl-pds">'</span></span>;
+form.<span class="pl-c1">setAttribute</span>(<span class="pl-s"><span class="pl-pds">'</span>method<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>POST<span class="pl-pds">'</span></span>);
+form.<span class="pl-c1">setAttribute</span>(<span class="pl-s"><span class="pl-pds">'</span>action<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>http://xxxx.com/track<span class="pl-pds">'</span></span>);
+
+input.<span class="pl-c1">name</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>username<span class="pl-pds">'</span></span>;
+input.<span class="pl-c1">value</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>attacker<span class="pl-pds">'</span></span>;
+
+form.<span class="pl-c1">appendChild</span>(input);
+<span class="pl-c1">document</span>.<span class="pl-c1">getElementsByTagName</span>(<span class="pl-s"><span class="pl-pds">'</span>body<span class="pl-pds">'</span></span>)[<span class="pl-c1">0</span>].<span class="pl-c1">appendChild</span>(form);
+
+form.<span class="pl-c1">submit</span>();</pre></div>
+
+<h3>
+<a id="multiple-post" class="anchor" href="#multiple-post" aria-hidden="true"><span class="octicon octicon-link"></span></a>Multiple Post</h3>
+
+<p>The Service is often complex, we need to send more data through method POST.</p>
+
+<div class="highlight highlight-js"><pre><span class="pl-k">function</span> <span class="pl-en">requestWithoutAjax</span>( <span class="pl-smi">url</span>, <span class="pl-smi">params</span>, <span class="pl-smi">method</span> ){
+
+    params <span class="pl-k">=</span> params <span class="pl-k">||</span> {};
+    method <span class="pl-k">=</span> method <span class="pl-k">||</span> <span class="pl-s"><span class="pl-pds">"</span>post<span class="pl-pds">"</span></span>;
+
+    <span class="pl-c">// function to remove the iframe</span>
+    <span class="pl-k">var</span> <span class="pl-en">removeIframe</span> <span class="pl-k">=</span> <span class="pl-k">function</span>( <span class="pl-smi">iframe</span> ){
+        iframe.parentElement.<span class="pl-c1">removeChild</span>(iframe);
+    };
+
+    <span class="pl-c">// make a iframe...</span>
+    <span class="pl-k">var</span> iframe <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>iframe<span class="pl-pds">'</span></span>);
+    iframe.<span class="pl-c1">style</span>.<span class="pl-c1">display</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>none<span class="pl-pds">'</span></span>;
+
+    <span class="pl-c1">iframe</span>.<span class="pl-en">onload</span> <span class="pl-k">=</span> <span class="pl-k">function</span>(){
+        <span class="pl-k">var</span> iframeDoc <span class="pl-k">=</span> <span class="pl-v">this</span>.contentWindow.<span class="pl-c1">document</span>;
+
+        <span class="pl-c">// Make a invisible form</span>
+        <span class="pl-k">var</span> form <span class="pl-k">=</span> iframeDoc.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>form<span class="pl-pds">'</span></span>);
+        form.<span class="pl-c1">method</span> <span class="pl-k">=</span> method;
+        form.<span class="pl-c1">action</span> <span class="pl-k">=</span> url;
+        iframeDoc.<span class="pl-c1">body</span>.<span class="pl-c1">appendChild</span>(form);
+
+        <span class="pl-c">// pass the parameters</span>
+        <span class="pl-k">for</span>( <span class="pl-k">var</span> name <span class="pl-k">in</span> params ){
+            <span class="pl-k">var</span> input <span class="pl-k">=</span> iframeDoc.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>input<span class="pl-pds">'</span></span>);
+            input.<span class="pl-c1">type</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>hidden<span class="pl-pds">'</span></span>;
+            input.<span class="pl-c1">name</span> <span class="pl-k">=</span> name;
+            input.<span class="pl-c1">value</span> <span class="pl-k">=</span> params[name];
+            form.<span class="pl-c1">appendChild</span>(input);
+        }
+
+        form.<span class="pl-c1">submit</span>();
+        <span class="pl-c">// remove the iframe</span>
+        <span class="pl-c1">setTimeout</span>( <span class="pl-k">function</span>(){ 
+            removeIframe(iframe);
+        }, <span class="pl-c1">500</span>);
+    };
+
+    <span class="pl-c1">document</span>.<span class="pl-c1">body</span>.<span class="pl-c1">appendChild</span>(iframe);
+}</pre></div>
+
+<div class="highlight highlight-js"><pre>requestWithoutAjax(<span class="pl-s"><span class="pl-pds">'</span>url/to<span class="pl-pds">'</span></span>, { id<span class="pl-k">:</span> <span class="pl-c1">2</span>, price<span class="pl-k">:</span> <span class="pl-c1">2.5</span>, lastname<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Gamez<span class="pl-pds">'</span></span>});</pre></div>
+
+<h3>
+<a id="iframe" class="anchor" href="#iframe" aria-hidden="true"><span class="octicon octicon-link"></span></a>Iframe</h3>
+
+<p>If you request is more complicated, use iframe.</p>
+
+<div class="highlight highlight-js"><pre><span class="pl-k">var</span> iframe <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>iframe<span class="pl-pds">'</span></span>);
+<span class="pl-k">var</span> body <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">getElementsByTagName</span>(<span class="pl-s"><span class="pl-pds">'</span>body<span class="pl-pds">'</span></span>)[<span class="pl-c1">0</span>];
+
+iframe.<span class="pl-c1">style</span>.<span class="pl-c1">display</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>none<span class="pl-pds">'</span></span>;
+iframe.<span class="pl-c1">src</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://xxxx.com/page<span class="pl-pds">'</span></span>;
+<span class="pl-c1">iframe</span>.<span class="pl-en">onreadystatechange</span> <span class="pl-k">=</span> <span class="pl-k">function</span> () {
+    <span class="pl-k">if</span> (iframe.<span class="pl-c1">readyState</span> <span class="pl-k">!==</span> <span class="pl-s"><span class="pl-pds">'</span>complete<span class="pl-pds">'</span></span>) {
+        <span class="pl-k">return</span>;
+    }
+};
+
+body.append(iframe);</pre></div>
+
+<h3>
+<a id="xmlhttprequest" class="anchor" href="#xmlhttprequest" aria-hidden="true"><span class="octicon octicon-link"></span></a>XMLHttpRequest</h3>
+
+<h2>
+<a id="component-of-uri" class="anchor" href="#component-of-uri" aria-hidden="true"><span class="octicon octicon-link"></span></a>Component of URI</h2>
+
+<p>It's important to know if your SDK need to parse the location url.</p>
+
+<pre><code>                         authority
+                   __________|_________
+                  /                    \
+              userinfo                host                          resource
+               __|___                ___|___                 __________|___________
+              /      \              /       \               /                      \
+         username  password     hostname    port     path &amp; segment      query   fragment
+           __|___   __|__    ______|______   |   __________|_________   ____|____   |
+          /      \ /     \  /             \ / \ /                    \ /         \ / \
+    foo://username:password@www.example.com:123/hello/world/there.html?name=ferret#foo
+    \_/                     \ / \       \ /    \__________/ \     \__/
+     |                       |   \       |           |       \      |
+  scheme               subdomain  \     tld      directory    \   suffix
+                                   \____/                      \___/
+                                      |                          |
+                                    domain                   filename
+</code></pre>
+
+<h3>
+<a id="parsing-uri" class="anchor" href="#parsing-uri" aria-hidden="true"><span class="octicon octicon-link"></span></a>Parsing URI</h3>
+
+<p>Here's a simplest by using the native URL() Interface but it doesn't support on all the browsers.</p>
+
+<div class="highlight highlight-js"><pre><span class="pl-k">var</span> parser <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">URL</span>(<span class="pl-s"><span class="pl-pds">'</span>http://github.com/huei90<span class="pl-pds">'</span></span>);
+parser.<span class="pl-c1">hostname</span>; <span class="pl-c">// =&gt; "github.com"</span></pre></div>
+
+<p>For the browser which doesn't have the URL() Interface, try DOM createElement('a').</p>
+
+<div class="highlight highlight-js"><pre><span class="pl-k">var</span> parser <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>a<span class="pl-pds">'</span></span>);
+parser.<span class="pl-c1">href</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>http://github.com/huei90<span class="pl-pds">"</span></span>;
+parser.<span class="pl-c1">hostname</span>; <span class="pl-c">// =&gt; "github.com"</span></pre></div>
+
+<h2>
+<a id="book-to-read" class="anchor" href="#book-to-read" aria-hidden="true"><span class="octicon octicon-link"></span></a>Book to Read</h2>
+
+<ol>
+<li><a href="http://thirdpartyjs.com">Third-Party Javascript</a></li>
+</ol>
+
+<h2>
+<a id="reference" class="anchor" href="#reference" aria-hidden="true"><span class="octicon octicon-link"></span></a>Reference</h2>
+
+<ol>
+<li><a href="http://www.webopedia.com/TERM/S/SDK.html">What is Software Development Kit</a></li>
+<li><a href="https://github.com/github/fetch">A window.fetch JavaScript polyfill.</a></li>
+<li><a href="http://stackoverflow.com/questions/692196/post-request-javascript/25423688#25423688">POST Request</a></li>
+<li><a href="http://semver.org">Semantic VersioningVersioning 2.0.0</a></li>
+<li><a href="https://github.com/interagent/http-api-design">HTTP API design guide extracted from work on the Heroku Platform API</a></li>
+<li><a href="http://medialize.github.io/URI.js/about-uris.html">Understanding URIs</a></li>
+<li><a href="https://gist.github.com/jlong/2428561">URI Parsing with Javascript</a></li>
+<li><a href="http://modernizr.com">Modernizr: the feature detection library for HTML5/CSS3</a></li>
+<li><a href="http://www.w3schools.com/html/html5_webstorage.asp">HTML5 Web Storage</a></li>
+<li><a href="http://stackoverflow.com/questions/3550790/check-if-third-party-cookies-are-enabled">Check if third-party cookies are enabled</a></li>
+<li><a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/">Introduction to Analytics.js - Universal Analytics Web Tracking</a></li>
+</ol>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/huei90/javascript-sdk-design">Javascript-sdk-design</a> is maintained by <a href="https://github.com/huei90">huei90</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
+
