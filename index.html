@@ -31,7 +31,7 @@ on desktop and mobile web in different platforms and browsers (&lt;99.99% I migh
 <p>Since I didn't find out a better documentation for the javascript sdk,
 I'm here to collect and note down the knowledges from my experiences.</p>
 
-<p>Feel free to edit it if you think there's a better design methodology or 
+<p>Feel free to <a href="https://github.com/huei90/javascript-sdk-design/edit/master/README.md">edit</a> it if you think there's a better design methodology or 
 any others I didn't mention here.</p>
 
 <p><em>(inspired by <a href="https://github.com/interagent/http-api-design">http-api-design</a>)</em></p>
@@ -76,7 +76,7 @@ any others I didn't mention here.</p>
 </ul>
 </li>
 <li>
-<a href="#sessionstorage">SessionStorage</a>
+<a href="#session-storage">Session Storage</a>
 
 <ul>
 <li><a href="#check-sessionstorage-writable">Check SessionStorage Writable</a></li>
@@ -107,6 +107,8 @@ any others I didn't mention here.</p>
 
 <ul>
 <li><a href="#piggyback">Piggyback</a></li>
+<li><a href="#browsersync">BrowserSync</a></li>
+<li><a href="#page-visibility-api">Page Visibility API</a></li>
 </ul>
 </li>
 <li><a href="#book-to-read">Book to Read</a></li>
@@ -124,7 +126,7 @@ any others I didn't mention here.</p>
 <a id="design-philosophy" class="anchor" href="#design-philosophy" aria-hidden="true"><span class="octicon octicon-link"></span></a>Design Philosophy</h2>
 
 <p>It depends on your purpose of your SDK service and usage, 
-but there must be <strong>native</strong>, <strong>short</strong>, <strong>fast</strong>, <strong>clean</strong> and <strong>readable</strong>.</p>
+but there must be <strong>native</strong>, <strong>short</strong>, <strong>fast</strong>, <strong>clean</strong>, <strong>readable</strong> and <strong>testable</strong>.</p>
 
 <p>Written in native javascript code, compiler language like 
 livescript, coffeescript, typescript and others are not recommend.
@@ -135,7 +137,7 @@ you can have other jQuery-like libraries, zepto.js, for the DOM manipulation.
 Or if you need the http ajax request, use other light library like <code>window.fetch</code>.</p>
 
 <p>Once every SDK version released, make sure that it can be fitted into older and newer SDK version in the future. 
-Therefore, remember to write your <strong>Documentation</strong> for your SDK and comment for your code.</p>
+Therefore, remember to write your <strong>Documentation</strong> for your SDK, comment for your code, unit test and user scenario test.</p>
 
 <h2>
 <a id="include-the-sdk" class="anchor" href="#include-the-sdk" aria-hidden="true"><span class="octicon octicon-link"></span></a>Include the SDK</h2>
@@ -224,6 +226,24 @@ your SDK should handle and execute <code>SDKName.q</code> and reinitial the name
 
   <span class="pl-c">// execute your script immediately here</span>
   SDKName(<span class="pl-s"><span class="pl-pds">'</span>some arguments<span class="pl-pds">'</span></span>);
+<span class="pl-k">&lt;</span>/script<span class="pl-k">&gt;</span></pre></div>
+
+<p><strong>Or</strong> using [].push</p>
+
+<div class="highlight highlight-js"><pre><span class="pl-k">&lt;</span>script<span class="pl-k">&gt;</span>
+  (<span class="pl-k">function</span> () {
+    <span class="pl-c">// add a queue event here</span>
+    SDKName <span class="pl-k">=</span> <span class="pl-c1">window</span>.SDKName <span class="pl-k">||</span> (<span class="pl-c1">window</span>.SDKName <span class="pl-k">=</span> []);
+    <span class="pl-k">var</span> s <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>script<span class="pl-pds">'</span></span>);
+    s.<span class="pl-c1">type</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>text/javascript<span class="pl-pds">'</span></span>;
+    s.async <span class="pl-k">=</span> <span class="pl-c1">true</span>;
+    s.<span class="pl-c1">src</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://xxx.com/sdk.js<span class="pl-pds">'</span></span>;
+    <span class="pl-k">var</span> x <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">getElementsByTagName</span>(<span class="pl-s"><span class="pl-pds">'</span>script<span class="pl-pds">'</span></span>)[<span class="pl-c1">0</span>];
+    x.<span class="pl-c1">parentNode</span>.<span class="pl-c1">insertBefore</span>(s, x);
+  })();
+
+  <span class="pl-c">// execute your script immediately here</span>
+  SDKName.<span class="pl-c1">push</span>([<span class="pl-s"><span class="pl-pds">'</span>some arguments<span class="pl-pds">'</span></span>]);
 <span class="pl-k">&lt;</span>/script<span class="pl-k">&gt;</span></pre></div>
 
 <h2>
@@ -432,6 +452,14 @@ but there's a better solution to implement it.</p>
 
 <div class="highlight highlight-js"><pre>(<span class="pl-k">new</span> <span class="pl-en">Image</span>()).<span class="pl-c1">src</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://xxxxx.com/collect?id=1111<span class="pl-pds">'</span></span>;</pre></div>
 
+<p>Some notice for GET Query String, there is the limit of length which is 2048(Basically It depends on different browser and server). You should do some tricks to handle if exceed length limit.</p>
+
+<div class="highlight highlight-js"><pre><span class="pl-k">if</span> (length <span class="pl-k">&gt;</span> <span class="pl-c1">2048</span>) {
+    <span class="pl-c">// do Multiple Post (form)</span>
+} <span class="pl-k">else</span> {
+    <span class="pl-c">// do Image Beacon</span>
+}</pre></div>
+
 <h3>
 <a id="single-post" class="anchor" href="#single-post" aria-hidden="true"><span class="octicon octicon-link"></span></a>Single Post</h3>
 
@@ -504,7 +532,7 @@ form.<span class="pl-c1">submit</span>();</pre></div>
 <h3>
 <a id="iframe" class="anchor" href="#iframe" aria-hidden="true"><span class="octicon octicon-link"></span></a>Iframe</h3>
 
-<p>If you request is more complicated, use iframe.</p>
+<p>When you need to generate a content within the page, you can use iframe to embed your html.</p>
 
 <div class="highlight highlight-js"><pre><span class="pl-k">var</span> iframe <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>iframe<span class="pl-pds">'</span></span>);
 <span class="pl-k">var</span> body <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">getElementsByTagName</span>(<span class="pl-s"><span class="pl-pds">'</span>body<span class="pl-pds">'</span></span>)[<span class="pl-c1">0</span>];
@@ -570,6 +598,18 @@ we just need to do a simple 1x1 pixel request (for example: return a request whe
 
 <div class="highlight highlight-html"><pre>&lt;<span class="pl-ent">img</span> <span class="pl-e">height</span>=<span class="pl-s"><span class="pl-pds">"</span>1<span class="pl-pds">"</span></span> <span class="pl-e">width</span>=<span class="pl-s"><span class="pl-pds">"</span>1<span class="pl-pds">"</span></span> <span class="pl-e">alt</span>=<span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span> <span class="pl-e">style</span>=<span class="pl-s"><span class="pl-pds">"</span>display:none<span class="pl-pds">"</span></span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>https://yourUrlLink.com/t?timestamp=1234567890<span class="pl-ii">&amp;</span>type=page1<span class="pl-ii">&amp;</span>currency=USD<span class="pl-ii">&amp;</span>noscript=1<span class="pl-pds">"</span></span> /&gt;</pre></div>
 
+<h3>
+<a id="browsersync" class="anchor" href="#browsersync" aria-hidden="true"><span class="octicon octicon-link"></span></a>BrowserSync</h3>
+
+<p><a href="http://www.browsersync.io">BrowserSync</a> makes your tweaking and testing faster by synchronising file changes and interactions across multiple devices. It’s wicked-fast and totally free.</p>
+
+<p>It really helps alot if you need to test your sdk result in multiple cross devices. Try it =)</p>
+
+<h3>
+<a id="page-visibility-api" class="anchor" href="#page-visibility-api" aria-hidden="true"><span class="octicon octicon-link"></span></a>Page Visibility API</h3>
+
+<p>Sometimes, your SDK wants to detect the user is whether focus your page. Try the polyfills  <a href="https://github.com/addyosmani/visibly.js">visibly.js</a> and <a href="https://github.com/ai/visibilityjs">visibilityjs</a>.</p>
+
 <h2>
 <a id="book-to-read" class="anchor" href="#book-to-read" aria-hidden="true"><span class="octicon octicon-link"></span></a>Book to Read</h2>
 
@@ -593,6 +633,7 @@ we just need to do a simple 1x1 pixel request (for example: return a request whe
 <li><a href="http://stackoverflow.com/questions/3550790/check-if-third-party-cookies-are-enabled">Check if third-party cookies are enabled</a></li>
 <li><a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/">Introduction to Analytics.js - Universal Analytics Web Tracking</a></li>
 <li><a href="https://www.facebook.com/help/421433191260652">Facebook Conversion Tracking Pixel</a></li>
+<li><a href="http://www.boutell.com/newfaq/misc/urllength.html">What is the maximum length of a URL</a></li>
 </ol>
 
       <footer class="site-footer">
