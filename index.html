@@ -109,6 +109,8 @@ any others I didn't mention here.</p>
 <li><a href="#piggyback">Piggyback</a></li>
 <li><a href="#browsersync">BrowserSync</a></li>
 <li><a href="#page-visibility-api">Page Visibility API</a></li>
+<li><a href="#document-referrer">Document Referrer</a></li>
+<li><a href="#encodeuri-or-encodeuricomponent">EncodeURI or EncodeURIComponent</a></li>
 </ul>
 </li>
 <li><a href="#book-to-read">Book to Read</a></li>
@@ -460,6 +462,8 @@ but there's a better solution to implement it.</p>
     <span class="pl-c">// do Image Beacon</span>
 }</pre></div>
 
+<p>You may have the problem on <code>encodeURI</code> or <code>encodeURIComponent</code>, it's better if you understand them. <a href="#encodeuri-or-encodeuricomponent">See below</a>.</p>
+
 <h3>
 <a id="single-post" class="anchor" href="#single-post" aria-hidden="true"><span class="octicon octicon-link"></span></a>Single Post</h3>
 
@@ -609,6 +613,19 @@ we just need to do a simple 1x1 pixel request (for example: return a request whe
 <a id="page-visibility-api" class="anchor" href="#page-visibility-api" aria-hidden="true"><span class="octicon octicon-link"></span></a>Page Visibility API</h3>
 
 <p>Sometimes, your SDK wants to detect the user is whether focus your page. Try the polyfills  <a href="https://github.com/addyosmani/visibly.js">visibly.js</a> and <a href="https://github.com/ai/visibilityjs">visibilityjs</a>.</p>
+
+<h3>
+<a id="document-referrer" class="anchor" href="#document-referrer" aria-hidden="true"><span class="octicon octicon-link"></span></a>Document Referrer</h3>
+
+<p>Use <code>document.referrer</code> to get the url of current previous page. But remember that this referrer is "Browser Referrer" not the "Human Known Referrer". If you click the <strong>browser back button</strong>, for example pageA -&gt; pageB -&gt; pageC -&gt; (back button) pageB, current pageB's referrer is pageA, not pageC.</p>
+
+<h3>
+<a id="encodeuri-or-encodeuricomponent" class="anchor" href="#encodeuri-or-encodeuricomponent" aria-hidden="true"><span class="octicon octicon-link"></span></a>EncodeURI or EncodeURIComponent</h3>
+
+<p>Understand the difference between <code>escape()</code> <code>encodeURI()</code> <code>encodeURIComponent()</code> <a href="http://stackoverflow.com/a/3608791/1748884">here</a>.</p>
+
+<p>Remember that using <code>encodeURI()</code> and <code>encodeURIComponent()</code> has exactly 11 characters difference.
+These characters are: # $ &amp; + , / : ; = ? @ <a href="http://stackoverflow.com/a/23842171/1748884">more discussion</a>.</p>
 
 <h2>
 <a id="book-to-read" class="anchor" href="#book-to-read" aria-hidden="true"><span class="octicon octicon-link"></span></a>Book to Read</h2>
