@@ -92,6 +92,8 @@ any others I didn't mention here.</p>
 <li><a href="#single-post">Single Post</a></li>
 <li><a href="#multiple-post">Multiple Post</a></li>
 <li><a href="#iframe">Iframe</a></li>
+<li><a href="#script-jsonp">Script jsonp</a></li>
+<li><a href="#navigatorsendbeacon">Navigator.sendBeacon()</a></li>
 <li><a href="#xmlhttprequest">XMLHttpRequest</a></li>
 </ul>
 </li>
@@ -552,7 +554,45 @@ iframe.<span class="pl-c1">src</span> <span class="pl-k">=</span> <span class="p
 body.append(iframe);</pre></div>
 
 <h3>
+<a id="script-jsonp" class="anchor" href="#script-jsonp" aria-hidden="true"><span class="octicon octicon-link"></span></a>Script jsonp</h3>
+
+<p>This is the case that your server need to response javascript code and let the client browser execute it.
+Just include the JS script link.</p>
+
+<div class="highlight highlight-js"><pre>  (<span class="pl-k">function</span> () {
+    <span class="pl-k">var</span> s <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>script<span class="pl-pds">'</span></span>);
+    s.<span class="pl-c1">type</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>text/javascript<span class="pl-pds">'</span></span>;
+    s.async <span class="pl-k">=</span> <span class="pl-c1">true</span>;
+    s.<span class="pl-c1">src</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>/yourscript?some=parameter<span class="pl-pds">'</span></span>;
+    <span class="pl-k">var</span> x <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">getElementsByTagName</span>(<span class="pl-s"><span class="pl-pds">'</span>script<span class="pl-pds">'</span></span>)[<span class="pl-c1">0</span>];
+    x.<span class="pl-c1">parentNode</span>.<span class="pl-c1">insertBefore</span>(s, x);
+  })();</pre></div>
+
+<h3>
+<a id="navigatorsendbeacon" class="anchor" href="#navigatorsendbeacon" aria-hidden="true"><span class="octicon octicon-link"></span></a>Navigator.sendBeacon()</h3>
+
+<p>Look at the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Navigator/sendBeacon">documentation</a>.</p>
+
+<blockquote>
+<p>This method addresses the needs of analytics and diagnostics code that typically attempt to send data to a web server prior to the unloading of the document. Sending the data any sooner may result in a missed opportunity to gather data. However, ensuring that the data has been sent during the unloading of a document is something that has traditionally been difficult for developers.</p>
+</blockquote>
+
+<p>Send POST beacon through the API. It's cool.</p>
+
+<div class="highlight highlight-js"><pre><span class="pl-c1">navigator</span>.sendBeacon(<span class="pl-s"><span class="pl-pds">"</span>/log<span class="pl-pds">"</span></span>, analyticsData);</pre></div>
+
+<h3>
 <a id="xmlhttprequest" class="anchor" href="#xmlhttprequest" aria-hidden="true"><span class="octicon octicon-link"></span></a>XMLHttpRequest</h3>
+
+<p>Writing XMLHttpRequest is not a good idea. I assume that you don't want to waste time on battling with IE or other browsers. Here's some polyfills or code you can try</p>
+
+<ol>
+<li>
+<a href="https://github.com/github/fetch">window.fetch</a> - A window.fetch JavaScript polyfill.</li>
+<li>
+<a href="https://github.com/sindresorhus/got">got</a> - Simplified HTTP/HTTPS requests</li>
+<li>more</li>
+</ol>
 
 <h2>
 <a id="component-of-uri" class="anchor" href="#component-of-uri" aria-hidden="true"><span class="octicon octicon-link"></span></a>Component of URI</h2>
