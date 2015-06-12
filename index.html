@@ -25,13 +25,13 @@
 <h2>
 <a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction</h2>
 
-<p>This guide gives you an introduction to develop a javascript sdk 
-on desktop and mobile web in different platforms and browsers (&lt;99.99% I might skip some browsers). </p>
+<p>This guide gives you an introduction to develop a javascript sdk
+on desktop and mobile web in different platforms and browsers (&lt;99.99% I might skip some browsers).</p>
 
 <p>Since I didn't find out a better documentation for the javascript sdk,
 I'm here to collect and note down the knowledges from my experiences.</p>
 
-<p>Feel free to <a href="https://github.com/huei90/javascript-sdk-design/edit/master/README.md">edit</a> it if you think there's a better design methodology or 
+<p>Feel free to <a href="https://github.com/huei90/javascript-sdk-design/edit/master/README.md">edit</a> it if you think there's a better design methodology or
 any others I didn't mention here.</p>
 
 <p><em>(inspired by <a href="https://github.com/interagent/http-api-design">http-api-design</a>)</em></p>
@@ -85,6 +85,13 @@ any others I didn't mention here.</p>
 </ul>
 </li>
 <li>
+<a href="#event">Event</a>
+
+<ul>
+<li><a href="#document-ready">Document Ready</a></li>
+</ul>
+</li>
+<li>
 <a href="#request">Request</a>
 
 <ul>
@@ -113,8 +120,10 @@ any others I didn't mention here.</p>
 <li><a href="#page-visibility-api">Page Visibility API</a></li>
 <li><a href="#document-referrer">Document Referrer</a></li>
 <li><a href="#encodeuri-or-encodeuricomponent">EncodeURI or EncodeURIComponent</a></li>
+<li><a href="#you-might-not-need-jquery">YOU MIGHT NOT NEED JQUERY</a></li>
 </ul>
 </li>
+<li><a href="#example">Example</a></li>
 <li><a href="#book-to-read">Book to Read</a></li>
 <li><a href="#reference">Reference</a></li>
 </ul>
@@ -129,18 +138,18 @@ any others I didn't mention here.</p>
 <h2>
 <a id="design-philosophy" class="anchor" href="#design-philosophy" aria-hidden="true"><span class="octicon octicon-link"></span></a>Design Philosophy</h2>
 
-<p>It depends on your purpose of your SDK service and usage, 
+<p>It depends on your purpose of your SDK service and usage,
 but there must be <strong>native</strong>, <strong>short</strong>, <strong>fast</strong>, <strong>clean</strong>, <strong>readable</strong> and <strong>testable</strong>.</p>
 
-<p>Written in native javascript code, compiler language like 
+<p>Written in native javascript code, compiler language like
 livescript, coffeescript, typescript and others are not recommend.
 There must be a better way to write your own javascript code in native faster than others.</p>
 
-<p>Please don't involve jQuery in your SDK unless it's really important, 
-you can have other jQuery-like libraries, zepto.js, for the DOM manipulation. 
+<p>Please don't involve jQuery in your SDK unless it's really important,
+you can have other jQuery-like libraries, zepto.js, for the DOM manipulation.
 Or if you need the http ajax request, use other light library like <code>window.fetch</code>.</p>
 
-<p>Once every SDK version released, make sure that it can be fitted into older and newer SDK version in the future. 
+<p>Once every SDK version released, make sure that it can be fitted into older and newer SDK version in the future.
 Therefore, remember to write your <strong>Documentation</strong> for your SDK, comment for your code, unit test and user scenario test.</p>
 
 <h2>
@@ -180,7 +189,7 @@ We want to optimize the user experience on the website as we don't want our SDK 
 <p>Asynchronous:</p>
 
 <pre><code> |----A-----|
-    |-----B-----------| 
+    |-----B-----------|
         |-------C------|
 </code></pre>
 
@@ -209,9 +218,9 @@ you cannot execute your SDK function which script written within the page.</p>
   SDKName(<span class="pl-s"><span class="pl-pds">'</span>some arguments<span class="pl-pds">'</span></span>);
 <span class="pl-k">&lt;</span>/script<span class="pl-k">&gt;</span></pre></div>
 
-<p>The result will lead to undefined because the <code>SDKName()</code> execute before the script loaded, 
-therefore we should do some tricks and make sure the script execute successfully. 
-The event will store in the <code>SDKName.q</code> queue array, 
+<p>The result will lead to undefined because the <code>SDKName()</code> execute before the script loaded,
+therefore we should do some tricks and make sure the script execute successfully.
+The event will store in the <code>SDKName.q</code> queue array,
 your SDK should handle and execute <code>SDKName.q</code> and reinitial the namespace <code>SDKName</code>.</p>
 
 <div class="highlight highlight-js"><pre><span class="pl-k">&lt;</span>script<span class="pl-k">&gt;</span>
@@ -253,8 +262,8 @@ your SDK should handle and execute <code>SDKName.q</code> and reinitial the name
 <h2>
 <a id="sdk-versioning" class="anchor" href="#sdk-versioning" aria-hidden="true"><span class="octicon octicon-link"></span></a>SDK Versioning</h2>
 
-<p>Please avoid using your special case for version like <code>brand-v&lt;timestamp&gt;.js</code> <code>brand-v&lt;datetime&gt;.js</code> <code>brand-v1-v2.js</code>, 
-it may cause the developer who use the SDK on confusing which is the latest version. </p>
+<p>Please avoid using your special case for version like <code>brand-v&lt;timestamp&gt;.js</code> <code>brand-v&lt;datetime&gt;.js</code> <code>brand-v1-v2.js</code>,
+it may cause the developer who use the SDK on confusing which is the latest version.</p>
 
 <p>Use <a href="http://semver.org">Semantic Versioning</a> to define your SDK Version in the form "MAJOR.MINOR.PATCH".
 Version in <code>v1.0.0</code> <code>v1.5.0</code> <code>v2.0.0</code> is easier for them to trace and search for the changelog documentation.</p>
@@ -288,14 +297,14 @@ http://xxx.com/sdk-experimental.js
 <h2>
 <a id="changelog-document" class="anchor" href="#changelog-document" aria-hidden="true"><span class="octicon octicon-link"></span></a>Changelog Document</h2>
 
-<p>You should notice that your SDK user will not know if you upgrade your sdk without announcement. 
-Remember to write a changelog to document your major, minor and even bug fix change. 
-It will be a good developer experience if we can trace the changing API for the SDK.</p>
+<p>You should notice that your SDK user will not know if you upgrade your sdk without announcement.
+Remember to write a changelog to document your major, minor and even bug fix change.
+It will be a good developer experience if we can trace the changing API for the SDK. - <a href="http://keepachangelog.com">Keep a Changelog</a>, <a href="https://github.com/olivierlacan/keep-a-changelog">Github Repo</a></p>
 
 <h2>
 <a id="namespace" class="anchor" href="#namespace" aria-hidden="true"><span class="octicon octicon-link"></span></a>Namespace</h2>
 
-<p>You should not define more than one global namespace in your SDK and 
+<p>You should not define more than one global namespace in your SDK and
 prevent using the common word for your namespace to avoid collision with other libraries.</p>
 
 <p>On your SDK mainland, you should use <code>(function () { ... })()</code> to wrap all your source.</p>
@@ -308,8 +317,8 @@ prevent using the common word for your namespace to avoid collision with other l
 
 <p>The domain scope of using cookie is quite complex while involving the <code>subdomain</code> and <code>path</code>.</p>
 
-<p>For <code>path=/</code>, 
-you have a cookie <code>first=value1</code> in domain <code>http://github.com</code>, 
+<p>For <code>path=/</code>,
+you have a cookie <code>first=value1</code> in domain <code>http://github.com</code>,
 another cookie <code>second=value2</code> in domain <code>http://sub.github.com</code></p>
 
 <table>
@@ -395,13 +404,13 @@ and cookie <code>third=value3</code> in domain <code>http://sub.github.com</code
 <h3>
 <a id="session" class="anchor" href="#session" aria-hidden="true"><span class="octicon octicon-link"></span></a>Session</h3>
 
-<p>It's important to know that Javascript is not possible to write Session, 
+<p>It's important to know that Javascript is not possible to write Session,
 please refer to the server side team to implement Session.</p>
 
 <h3>
 <a id="localstorage" class="anchor" href="#localstorage" aria-hidden="true"><span class="octicon octicon-link"></span></a>LocalStorage</h3>
 
-<p>Stores data with no expiration date, storage limit is far larger (at least 5MB) and 
+<p>Stores data with no expiration date, storage limit is far larger (at least 5MB) and
 information is never transferred to the server.</p>
 
 <p>It's good to know that each localStorage from <code>http</code> and <code>https</code> in same domain aren't shared.
@@ -443,10 +452,33 @@ You can create an iframe inside the website and use <code>postMessage</code> to 
 }</pre></div>
 
 <h2>
+<a id="event" class="anchor" href="#event" aria-hidden="true"><span class="octicon octicon-link"></span></a>Event</h2>
+
+<p>In client browser, there are events <code>load</code> <code>unload</code> <code>on</code> <code>off</code> <code>bind</code> .... Here's some polyfills for you to handle all different platforms.</p>
+
+<h3>
+<a id="document-ready" class="anchor" href="#document-ready" aria-hidden="true"><span class="octicon octicon-link"></span></a>Document Ready</h3>
+
+<div class="highlight highlight-js"><pre><span class="pl-c">// handle IE8+</span>
+<span class="pl-k">function</span> <span class="pl-en">ready</span> (<span class="pl-smi">fn</span>) {
+    <span class="pl-k">if</span> (<span class="pl-c1">document</span>.<span class="pl-c1">readyState</span> <span class="pl-k">!=</span> <span class="pl-s"><span class="pl-pds">'</span>loading<span class="pl-pds">'</span></span>) {
+        fn();
+    } <span class="pl-k">else</span> <span class="pl-k">if</span> (<span class="pl-c1">document</span>.addEventListener) {
+        <span class="pl-c1">document</span>.addEventListener(<span class="pl-s"><span class="pl-pds">'</span>DOMContentLoaded<span class="pl-pds">'</span></span>, fn);
+    } <span class="pl-k">else</span> {
+        <span class="pl-c1">document</span>.<span class="pl-c1">attachEvent</span>(<span class="pl-s"><span class="pl-pds">'</span>onreadystatechange<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>() {
+            <span class="pl-k">if</span> (<span class="pl-c1">document</span>.<span class="pl-c1">readyState</span> <span class="pl-k">!=</span> <span class="pl-s"><span class="pl-pds">'</span>loading<span class="pl-pds">'</span></span>)
+                fn();
+            });
+    }
+}
+</pre></div>
+
+<h2>
 <a id="request" class="anchor" href="#request" aria-hidden="true"><span class="octicon octicon-link"></span></a>Request</h2>
 
-<p>The communication between our SDK and Server is using Ajax Request, 
-as we know we can use jQuery ajax http request to communicate with Server, 
+<p>The communication between our SDK and Server is using Ajax Request,
+as we know we can use jQuery ajax http request to communicate with Server,
 but there's a better solution to implement it.</p>
 
 <h3>
@@ -525,7 +557,7 @@ form.<span class="pl-c1">submit</span>();</pre></div>
 
         form.<span class="pl-c1">submit</span>();
         <span class="pl-c">// remove the iframe</span>
-        <span class="pl-c1">setTimeout</span>( <span class="pl-k">function</span>(){ 
+        <span class="pl-c1">setTimeout</span>( <span class="pl-k">function</span>(){
             removeIframe(iframe);
         }, <span class="pl-c1">500</span>);
     };
@@ -591,6 +623,8 @@ Just include the JS script link.</p>
 <a href="https://github.com/github/fetch">window.fetch</a> - A window.fetch JavaScript polyfill.</li>
 <li>
 <a href="https://github.com/sindresorhus/got">got</a> - Simplified HTTP/HTTPS requests</li>
+<li>
+<a href="http://microjs.com/#ajax">microjs</a> - list of ajax lib</li>
 <li>more</li>
 </ol>
 
@@ -637,7 +671,7 @@ parser.<span class="pl-c1">hostname</span>; <span class="pl-c">// =&gt; "github.
 <h3>
 <a id="piggyback" class="anchor" href="#piggyback" aria-hidden="true"><span class="octicon octicon-link"></span></a>Piggyback</h3>
 
-<p>Sometimes, we don't want our developers include all the SDK source, 
+<p>Sometimes, we don't want our developers include all the SDK source,
 we just need to do a simple 1x1 pixel request (for example: return a request when landing on thank you/last page). All we need to do is ask the developer to include an image file with our url link.</p>
 
 <div class="highlight highlight-html"><pre>&lt;<span class="pl-ent">img</span> <span class="pl-e">height</span>=<span class="pl-s"><span class="pl-pds">"</span>1<span class="pl-pds">"</span></span> <span class="pl-e">width</span>=<span class="pl-s"><span class="pl-pds">"</span>1<span class="pl-pds">"</span></span> <span class="pl-e">alt</span>=<span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span> <span class="pl-e">style</span>=<span class="pl-s"><span class="pl-pds">"</span>display:none<span class="pl-pds">"</span></span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>https://yourUrlLink.com/t?timestamp=1234567890<span class="pl-ii">&amp;</span>type=page1<span class="pl-ii">&amp;</span>currency=USD<span class="pl-ii">&amp;</span>noscript=1<span class="pl-pds">"</span></span> /&gt;</pre></div>
@@ -667,6 +701,16 @@ we just need to do a simple 1x1 pixel request (for example: return a request whe
 <p>Remember that using <code>encodeURI()</code> and <code>encodeURIComponent()</code> has exactly 11 characters difference.
 These characters are: # $ &amp; + , / : ; = ? @ <a href="http://stackoverflow.com/a/23842171/1748884">more discussion</a>.</p>
 
+<h3>
+<a id="you-might-not-need-jquery" class="anchor" href="#you-might-not-need-jquery" aria-hidden="true"><span class="octicon octicon-link"></span></a>YOU MIGHT NOT NEED JQUERY</h3>
+
+<p>As the title said, <a href="http://youmightnotneedjquery.com/">you might not need jquery</a>. It's really useful if you are looking for  some utilities code - <a href="http://youmightnotneedjquery.com/#AJAX">AJAX</a> <a href="http://youmightnotneedjquery.com/#effects">EFFECTS</a>, <a href="http://youmightnotneedjquery.com/#elements">ELEMENTS</a>, <a href="http://youmightnotneedjquery.com/#events">EVENTS</a>, <a href="http://youmightnotneedjquery.com/#utils">UTILS</a></p>
+
+<h2>
+<a id="example" class="anchor" href="#example" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example</h2>
+
+<p>See next page <a href="https://github.com/huei90/javascript-sdk-design/blob/master/EXAMPLE.md">EXAMPLE.md</a> to find out how others provide their javascript sdk.</p>
+
 <h2>
 <a id="book-to-read" class="anchor" href="#book-to-read" aria-hidden="true"><span class="octicon octicon-link"></span></a>Book to Read</h2>
 
@@ -691,6 +735,7 @@ These characters are: # $ &amp; + , / : ; = ? @ <a href="http://stackoverflow.co
 <li><a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/">Introduction to Analytics.js - Universal Analytics Web Tracking</a></li>
 <li><a href="https://www.facebook.com/help/421433191260652">Facebook Conversion Tracking Pixel</a></li>
 <li><a href="http://www.boutell.com/newfaq/misc/urllength.html">What is the maximum length of a URL</a></li>
+<li><a href="http://youmightnotneedjquery.com/">YOU MIGHT NOW NEED JQUERY</a></li>
 </ol>
 
       <footer class="site-footer">
