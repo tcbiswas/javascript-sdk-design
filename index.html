@@ -102,6 +102,7 @@ any others I didn't mention here.</p>
 <li><a href="#script-jsonp">Script jsonp</a></li>
 <li><a href="#navigatorsendbeacon">Navigator.sendBeacon()</a></li>
 <li><a href="#xmlhttprequest">XMLHttpRequest</a></li>
+<li><a href="#fragment-identifier">Fragment Identifier</a></li>
 </ul>
 </li>
 <li>
@@ -117,6 +118,7 @@ any others I didn't mention here.</p>
 <ul>
 <li><a href="#developer-tools">Developer Tools</a></li>
 <li><a href="#console-logs">Console Logs</a></li>
+<li><a href="#debugging-proxy">Debugging Proxy</a></li>
 </ul>
 </li>
 <li>
@@ -127,11 +129,14 @@ any others I didn't mention here.</p>
 <li><a href="#browsersync">BrowserSync</a></li>
 <li><a href="#page-visibility-api">Page Visibility API</a></li>
 <li><a href="#document-referrer">Document Referrer</a></li>
+<li><a href="#console-logs-polyfill">Console Logs Polyfill</a></li>
 <li><a href="#encodeuri-or-encodeuricomponent">EncodeURI or EncodeURIComponent</a></li>
 <li><a href="#you-might-not-need-jquery">YOU MIGHT NOT NEED JQUERY</a></li>
+<li><a href="#load-script-with-callback">Load Script with Callback</a></li>
 </ul>
 </li>
 <li><a href="#example">Example</a></li>
+<li><a href="#template">Template</a></li>
 <li><a href="#book-to-read">Book to Read</a></li>
 <li><a href="#reference">Reference</a></li>
 </ul>
@@ -638,6 +643,22 @@ Just include the JS script link.</p>
 <li>more</li>
 </ol>
 
+<h3>
+<a id="fragment-identifier" class="anchor" href="#fragment-identifier" aria-hidden="true"><span class="octicon octicon-link"></span></a>Fragment Identifier</h3>
+
+<p>Also known as hash mark <code>#</code>. Remember that request with hash mark at the end is not pass within http request.</p>
+
+<p>For example, you are in the page <code>http://github.com/awesome#huei90</code></p>
+
+<div class="highlight highlight-js"><pre><span class="pl-c">// Sending a request with a parameter url which contains current url</span>
+(<span class="pl-k">new</span> <span class="pl-en">Image</span>()).src <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://yourrequest.com?url=http://github.com/awesome#huei90<span class="pl-pds">'</span></span>;
+
+<span class="pl-c">// actual request will be without #</span>
+(<span class="pl-k">new</span> <span class="pl-en">Image</span>()).src <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://yourrequest.com?url=http://github.com/awesome<span class="pl-pds">'</span></span>;
+
+<span class="pl-c">// Solved, encodeURIComponent(url);</span>
+(<span class="pl-k">new</span> <span class="pl-en">Image</span>()).src <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://yourrequest.com?url=<span class="pl-pds">'</span></span> <span class="pl-k">+</span> encodeURIComponent(<span class="pl-s"><span class="pl-pds">'</span>http://github.com/awesome#huei90<span class="pl-pds">'</span></span>);</pre></div>
+
 <h2>
 <a id="component-of-uri" class="anchor" href="#component-of-uri" aria-hidden="true"><span class="octicon octicon-link"></span></a>Component of URI</h2>
 
@@ -694,6 +715,18 @@ parser.<span class="pl-c1">hostname</span>; <span class="pl-c">// =&gt; "github.
 
 <p><img src="https://cloud.githubusercontent.com/assets/2560096/8155377/411fb24a-1376-11e5-98da-f71f8ed29bcd.png" alt="screen shot 2015-06-15 at 3 50 23 pm"></p>
 
+<h3>
+<a id="debugging-proxy" class="anchor" href="#debugging-proxy" aria-hidden="true"><span class="octicon octicon-link"></span></a>Debugging Proxy</h3>
+
+<p>Sometimes debugging proxy will give you a hand on testing your sdk. Debug traffic, modify cookies, headers, cache, edit http request/response, SSL Proxying, ajax debugging and more.</p>
+
+<p>Here's some software you can try</p>
+
+<ul>
+<li><a href="http://www.telerik.com/fiddler/fiddlercore">FiddlerCore</a></li>
+<li><a href="http://www.charlesproxy.com">Charles</a></li>
+</ul>
+
 <h2>
 <a id="tips-and-tricks" class="anchor" href="#tips-and-tricks" aria-hidden="true"><span class="octicon octicon-link"></span></a>Tips and Tricks</h2>
 
@@ -723,6 +756,21 @@ we just need to do a simple 1x1 pixel request (for example: return a request whe
 <p>Use <code>document.referrer</code> to get the url of current previous page. But remember that this referrer is "Browser Referrer" not the "Human Known Referrer". If you click the <strong>browser back button</strong>, for example pageA -&gt; pageB -&gt; pageC -&gt; (back button) pageB, current pageB's referrer is pageA, not pageC.</p>
 
 <h3>
+<a id="console-logs-polyfill" class="anchor" href="#console-logs-polyfill" aria-hidden="true"><span class="octicon octicon-link"></span></a>Console Logs Polyfill</h3>
+
+<p>It's not a real polyfill, just make sure that calling <code>console.log</code> API doesn't throw error event to client side.</p>
+
+<div class="highlight highlight-js"><pre><span class="pl-k">if</span> (<span class="pl-k">typeof</span> <span class="pl-en">console</span> <span class="pl-k">===</span> <span class="pl-s"><span class="pl-pds">"</span>undefined<span class="pl-pds">"</span></span>) {
+    <span class="pl-k">var</span> <span class="pl-en">f</span> <span class="pl-k">=</span> <span class="pl-k">function</span>() {};
+    <span class="pl-en">console</span> <span class="pl-k">=</span> {
+        log<span class="pl-k">:</span> f,
+        debug<span class="pl-k">:</span> f,
+        error<span class="pl-k">:</span> f,
+        info<span class="pl-k">:</span> f
+    };
+}</pre></div>
+
+<h3>
 <a id="encodeuri-or-encodeuricomponent" class="anchor" href="#encodeuri-or-encodeuricomponent" aria-hidden="true"><span class="octicon octicon-link"></span></a>EncodeURI or EncodeURIComponent</h3>
 
 <p>Understand the difference between <code>escape()</code> <code>encodeURI()</code> <code>encodeURIComponent()</code> <a href="http://stackoverflow.com/a/3608791/1748884">here</a>.</p>
@@ -730,15 +778,51 @@ we just need to do a simple 1x1 pixel request (for example: return a request whe
 <p>Remember that using <code>encodeURI()</code> and <code>encodeURIComponent()</code> has exactly 11 characters difference.
 These characters are: # $ &amp; + , / : ; = ? @ <a href="http://stackoverflow.com/a/23842171/1748884">more discussion</a>.</p>
 
+<h2 align="center">
+<a id="-" class="anchor" href="#-" aria-hidden="true"><span class="octicon octicon-link"></span></a>
+ <img src="http://i.imgur.com/rHWC1r1.png" alt="encodeuri or encodeuricomponent">
+</h2>
+
 <h3>
 <a id="you-might-not-need-jquery" class="anchor" href="#you-might-not-need-jquery" aria-hidden="true"><span class="octicon octicon-link"></span></a>YOU MIGHT NOT NEED JQUERY</h3>
 
 <p>As the title said, <a href="http://youmightnotneedjquery.com/">you might not need jquery</a>. It's really useful if you are looking for  some utilities code - <a href="http://youmightnotneedjquery.com/#AJAX">AJAX</a> <a href="http://youmightnotneedjquery.com/#effects">EFFECTS</a>, <a href="http://youmightnotneedjquery.com/#elements">ELEMENTS</a>, <a href="http://youmightnotneedjquery.com/#events">EVENTS</a>, <a href="http://youmightnotneedjquery.com/#utils">UTILS</a></p>
 
+<h3>
+<a id="load-script-with-callback" class="anchor" href="#load-script-with-callback" aria-hidden="true"><span class="octicon octicon-link"></span></a>Load Script with Callback</h3>
+
+<p>It's similar to <a href="#asynchronous-syntax">asynchrnous script loading</a> with addition callback event</p>
+
+<div class="highlight highlight-js"><pre><span class="pl-k">function</span> <span class="pl-en">loadScript</span>(<span class="pl-smi">url</span>, <span class="pl-smi">callback</span>) {
+  <span class="pl-k">var</span> script <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>script<span class="pl-pds">'</span></span>);
+  script.async <span class="pl-k">=</span> <span class="pl-c1">true</span>;
+  script.src <span class="pl-k">=</span> url;
+
+  <span class="pl-k">var</span> entry <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">getElementsByTagName</span>(<span class="pl-s"><span class="pl-pds">'</span>script<span class="pl-pds">'</span></span>)[<span class="pl-c1">0</span>];
+  entry.<span class="pl-c1">parentNode</span>.<span class="pl-c1">insertBefore</span>(script, entry);
+
+  script.onload <span class="pl-k">=</span> <span class="pl-c1">script</span>.<span class="pl-en">onreadystatechange</span> <span class="pl-k">=</span> <span class="pl-k">function</span> () {
+    <span class="pl-k">var</span> rdyState <span class="pl-k">=</span> script.<span class="pl-c1">readyState</span>;
+
+    <span class="pl-k">if</span> (<span class="pl-k">!</span>rdyState <span class="pl-k">||</span><span class="pl-sr"> <span class="pl-pds">/</span>complete<span class="pl-k">|</span>loaded<span class="pl-pds">/</span></span>.<span class="pl-c1">test</span>(script.<span class="pl-c1">readyState</span>)) {
+      callback();
+
+      <span class="pl-c">// detach the event handler to avoid memory leaks in IE (http://mng.bz/W8fx)</span>
+      script.onload <span class="pl-k">=</span> <span class="pl-c1">null</span>;
+      script.<span class="pl-c1">onreadystatechange</span> <span class="pl-k">=</span> <span class="pl-c1">null</span>;
+    }
+  };
+}</pre></div>
+
 <h2>
 <a id="example" class="anchor" href="#example" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example</h2>
 
 <p>See next page <a href="https://github.com/huei90/javascript-sdk-design/blob/master/EXAMPLE.md">EXAMPLE.md</a> to find out how others provide their javascript sdk.</p>
+
+<h2>
+<a id="template" class="anchor" href="#template" aria-hidden="true"><span class="octicon octicon-link"></span></a>Template</h2>
+
+<p>Someone ask for the template/boilerplate of the sdk, here some example for you. <a href="https://github.com/huei90/javascript-sdk-design/blob/master/Template/README.md">TEMPLATE.md</a></p>
 
 <h2>
 <a id="booknice-to-read" class="anchor" href="#booknice-to-read" aria-hidden="true"><span class="octicon octicon-link"></span></a>Book/Nice to Read</h2>
