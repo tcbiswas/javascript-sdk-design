@@ -20,18 +20,18 @@
 
     <section class="main-content">
       <h1>
-<a id="javascript-sdk-design-guide" class="anchor" href="#javascript-sdk-design-guide" aria-hidden="true"><span class="octicon octicon-link"></span></a>Javascript SDK Design Guide</h1>
+<a id="javascript-sdk-design-guide" class="anchor" href="#javascript-sdk-design-guide" aria-hidden="true"><span class="octicon octicon-link"></span></a>JavaScript SDK Design Guide</h1>
 
 <h2>
 <a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction</h2>
 
-<p>This guide gives you an introduction to develop a javascript sdk
+<p>This guide gives you an introduction to develop a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript">JavaScript</a> sdk
 on desktop and mobile web in different platforms and browsers (&lt;99.99% I might skip some browsers).</p>
 
-<p>Since I didn't find out a better documentation for the javascript sdk,
+<p>Since I didn't find out a better documentation for the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript">JavaScript</a> sdk,
 I'm here to collect and note down the knowledges from my experiences.</p>
 
-<p>Feel free to <a href="https://github.com/huei90/javascript-sdk-design/edit/master/README.md">edit</a> it if you think there's a better design methodology or
+<p>Feel free to <a href="https://github.com/huei90/JavaScript-sdk-design/edit/master/README.md">edit</a> it if you think there's a better design methodology or
 any others I didn't mention here.</p>
 
 <p><em>(inspired by <a href="https://github.com/interagent/http-api-design">http-api-design</a>)</em></p>
@@ -137,7 +137,7 @@ any others I didn't mention here.</p>
 </li>
 <li><a href="#example">Example</a></li>
 <li><a href="#template">Template</a></li>
-<li><a href="#book-to-read">Book to Read</a></li>
+<li><a href="#booknice-to-read">Book to Read</a></li>
 <li><a href="#reference">Reference</a></li>
 </ul>
 
@@ -154,13 +154,13 @@ any others I didn't mention here.</p>
 <p>It depends on your purpose of your SDK service and usage,
 but there must be <strong>native</strong>, <strong>short</strong>, <strong>fast</strong>, <strong>clean</strong>, <strong>readable</strong> and <strong>testable</strong>.</p>
 
-<p>Written in native javascript code, compiler language like
-livescript, coffeescript, typescript and others are not recommend.
-There must be a better way to write your own javascript code in native faster than others.</p>
+<p>Written in native JavaScript code, compiler language like
+livescript, coffeescript, typescript and others are <strong>not</strong> recommend.
+There must be a better way to write your own JavaScript code in native faster than others.</p>
 
-<p>Please don't involve jQuery in your SDK unless it's really important,
+<p>Please <strong>don't</strong> involve jQuery in your SDK unless it's really important,
 you can have other jQuery-like libraries, zepto.js, for the DOM manipulation.
-Or if you need the http <a href="https://github.com/huei90/javascript-sdk-design#request">ajax request</a>, use other light library like <code>window.fetch</code>.</p>
+Or if you need the http <a href="https://github.com/huei90/JavaScript-sdk-design#request">ajax request</a>, use other light library like <code>window.fetch</code>.</p>
 
 <p>Once every SDK version released, make sure that it can be fitted into older and newer SDK version in the future.
 Therefore, remember to write your <strong>Documentation</strong> for your SDK, comment for your code, unit test and user scenario test.</p>
@@ -412,12 +412,12 @@ and cookie <code>third=value3</code> in domain <code>http://sub.github.com</code
 <h4>
 <a id="check-third-party-cookie-writable" class="anchor" href="#check-third-party-cookie-writable" aria-hidden="true"><span class="octicon octicon-link"></span></a>Check Third Party Cookie Writable</h4>
 
-<p>It's impossible to check only using client side javascript, you need a server to do that. (<a href="https://dl.dropboxusercontent.com/u/105727/web/3rd/third-party-cookies.html">Example</a>)</p>
+<p>It's impossible to check only using client side JavaScript, you need a server to do that. (<a href="https://dl.dropboxusercontent.com/u/105727/web/3rd/third-party-cookies.html">Example</a>)</p>
 
 <h3>
 <a id="session" class="anchor" href="#session" aria-hidden="true"><span class="octicon octicon-link"></span></a>Session</h3>
 
-<p>It's important to know that Javascript is not possible to write Session,
+<p>It's important to know that JavaScript is not possible to write Session,
 please refer to the server side team to implement Session.</p>
 
 <h3>
@@ -603,7 +603,7 @@ body.append(iframe);</pre></div>
 <h3>
 <a id="script-jsonp" class="anchor" href="#script-jsonp" aria-hidden="true"><span class="octicon octicon-link"></span></a>Script jsonp</h3>
 
-<p>This is the case that your server need to response javascript code and let the client browser execute it.
+<p>This is the case that your server need to response JavaScript code and let the client browser execute it.
 Just include the JS script link.</p>
 
 <div class="highlight highlight-js"><pre>  (<span class="pl-k">function</span> () {
@@ -702,7 +702,7 @@ parser.<span class="pl-c1">hostname</span>; <span class="pl-c">// =&gt; "github.
 <h3>
 <a id="developer-tools" class="anchor" href="#developer-tools" aria-hidden="true"><span class="octicon octicon-link"></span></a>Developer Tools</h3>
 
-<p>Use the web debugging tools from browser vendors when debugging your sdk Javascript code - <code>Chrome Developer Tools</code> <code>Safari Developer Tools</code> <code>Firebug</code>. Developer tools also short for DevTools.</p>
+<p>Use the web debugging tools from browser vendors when debugging your sdk JavaScript code - <code>Chrome Developer Tools</code> <code>Safari Developer Tools</code> <code>Firebug</code>. Developer tools also short for DevTools.</p>
 
 <blockquote>
 <p>The DevTools provide web developers deep access into the internals of the browser and their web application. Use the DevTools to efficiently track down layout issues, set JavaScript breakpoints, and get insights for code optimization.</p>
@@ -725,6 +725,7 @@ parser.<span class="pl-c1">hostname</span>; <span class="pl-c">// =&gt; "github.
 <ul>
 <li><a href="http://www.telerik.com/fiddler/fiddlercore">FiddlerCore</a></li>
 <li><a href="http://www.charlesproxy.com">Charles</a></li>
+<li><a href="https://itunes.apple.com/tw/app/cellist-http-debugging-proxy/id897814548?l=zh&amp;mt=12">Cellist</a></li>
 </ul>
 
 <h2>
@@ -817,19 +818,20 @@ These characters are: # $ &amp; + , / : ; = ? @ <a href="http://stackoverflow.co
 <h2>
 <a id="example" class="anchor" href="#example" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example</h2>
 
-<p>See next page <a href="https://github.com/huei90/javascript-sdk-design/blob/master/EXAMPLE.md">EXAMPLE.md</a> to find out how others provide their javascript sdk.</p>
+<p>See next page <a href="https://github.com/huei90/JavaScript-sdk-design/blob/master/EXAMPLE.md">EXAMPLE.md</a> to find out how others provide their JavaScript sdk.</p>
 
 <h2>
 <a id="template" class="anchor" href="#template" aria-hidden="true"><span class="octicon octicon-link"></span></a>Template</h2>
 
-<p>Someone ask for the template/boilerplate of the sdk, here some example for you. <a href="https://github.com/huei90/javascript-sdk-design/blob/master/Template/README.md">TEMPLATE.md</a></p>
+<p>Someone ask for the template/boilerplate of the sdk, here some example for you. <a href="https://github.com/huei90/JavaScript-sdk-design/blob/master/Template/README.md">TEMPLATE.md</a></p>
 
 <h2>
 <a id="booknice-to-read" class="anchor" href="#booknice-to-read" aria-hidden="true"><span class="octicon octicon-link"></span></a>Book/Nice to Read</h2>
 
 <ol>
-<li><a href="http://thirdpartyjs.com">Third-Party Javascript</a></li>
+<li><a href="http://thirdpartyjs.com">Third-Party JavaScript</a></li>
 <li><a href="https://learn.jquery.com/plugins/">JQuery Plugin</a></li>
+<li><a href="https://github.com/olark/lightningjs">LightningJS</a></li>
 </ol>
 
 <h2>
@@ -838,11 +840,11 @@ These characters are: # $ &amp; + , / : ; = ? @ <a href="http://stackoverflow.co
 <ol>
 <li><a href="http://www.webopedia.com/TERM/S/SDK.html">What is Software Development Kit</a></li>
 <li><a href="https://github.com/github/fetch">A window.fetch JavaScript polyfill.</a></li>
-<li><a href="http://stackoverflow.com/questions/692196/post-request-javascript/25423688#25423688">POST Request</a></li>
+<li><a href="http://stackoverflow.com/questions/692196/post-request-JavaScript/25423688#25423688">POST Request</a></li>
 <li><a href="http://semver.org">Semantic VersioningVersioning 2.0.0</a></li>
 <li><a href="https://github.com/interagent/http-api-design">HTTP API design guide extracted from work on the Heroku Platform API</a></li>
 <li><a href="http://medialize.github.io/URI.js/about-uris.html">Understanding URIs</a></li>
-<li><a href="https://gist.github.com/jlong/2428561">URI Parsing with Javascript</a></li>
+<li><a href="https://gist.github.com/jlong/2428561">URI Parsing with JavaScript</a></li>
 <li><a href="http://modernizr.com">Modernizr: the feature detection library for HTML5/CSS3</a></li>
 <li><a href="http://www.w3schools.com/html/html5_webstorage.asp">HTML5 Web Storage</a></li>
 <li><a href="http://stackoverflow.com/questions/3550790/check-if-third-party-cookies-are-enabled">Check if third-party cookies are enabled</a></li>
@@ -852,6 +854,8 @@ These characters are: # $ &amp; + , / : ; = ? @ <a href="http://stackoverflow.co
 <li><a href="http://youmightnotneedjquery.com/">YOU MIGHT NOW NEED JQUERY</a></li>
 <li><a href="https://remysharp.com/2010/10/08/what-is-a-polyfill">What is a Polyfill?</a></li>
 </ol>
+
+
 
       <footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/huei90/javascript-sdk-design">Javascript-sdk-design</a> is maintained by <a href="https://github.com/huei90">huei90</a>.</span>
