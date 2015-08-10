@@ -5,7 +5,7 @@
     <title>Javascript-sdk-design by huei90</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
   </head>
@@ -103,6 +103,7 @@ any others I didn't mention here.</p>
 <li><a href="#navigatorsendbeacon">Navigator.sendBeacon()</a></li>
 <li><a href="#xmlhttprequest">XMLHttpRequest</a></li>
 <li><a href="#fragment-identifier">Fragment Identifier</a></li>
+<li><a href="#maximum-number-of-connection">Maximum Number of Connection</a></li>
 </ul>
 </li>
 <li>
@@ -210,6 +211,10 @@ We want to optimize the user experience on the website as we don't want our SDK 
 
 <pre><code>|----A-----||-----B-----------||-------C------|
 </code></pre>
+
+<p>Asynchronous and deferred JavaScript execution explained</p>
+
+<p><img src="http://peter.sh/wp-content/uploads/2010/09/execution2.jpg"></p>
 
 <h3>
 <a id="problem-of-asynchronous" class="anchor" href="#problem-of-asynchronous" aria-hidden="true"><span class="octicon octicon-link"></span></a>Problem of Asynchronous</h3>
@@ -513,6 +518,13 @@ but there's a better solution to implement it.</p>
 
 <p>You may have the problem on <code>encodeURI</code> or <code>encodeURIComponent</code>, it's better if you understand them. <a href="#encodeuri-or-encodeuricomponent">See below</a>.</p>
 
+<p>For the image load <strong>success/error callback</strong></p>
+
+<div class="highlight highlight-js"><pre><span class="pl-k">var</span> img <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Image</span>();
+img.src <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://xxxxx.com/collect?id=1111<span class="pl-pds">'</span></span>;
+img.onload <span class="pl-k">=</span> successCallback;
+img.onerror <span class="pl-k">=</span> errorCallback;</pre></div>
+
 <h3>
 <a id="single-post" class="anchor" href="#single-post" aria-hidden="true"><span class="octicon octicon-link"></span></a>Single Post</h3>
 
@@ -597,6 +609,7 @@ iframe.src <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'
         <span class="pl-k">return</span>;
     }
 };
+iframe.onload <span class="pl-k">=</span> loadCallback;
 
 body.append(iframe);</pre></div>
 
@@ -658,6 +671,16 @@ Just include the JS script link.</p>
 
 <span class="pl-c">// Solved, encodeURIComponent(url);</span>
 (<span class="pl-k">new</span> <span class="pl-en">Image</span>()).src <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://yourrequest.com?url=<span class="pl-pds">'</span></span> <span class="pl-k">+</span> encodeURIComponent(<span class="pl-s"><span class="pl-pds">'</span>http://github.com/awesome#huei90<span class="pl-pds">'</span></span>);</pre></div>
+
+<h3>
+<a id="maximum-number-of-connection" class="anchor" href="#maximum-number-of-connection" aria-hidden="true"><span class="octicon octicon-link"></span></a>Maximum Number of Connection</h3>
+
+<p>Check the maximum number of browser's request connection. <a href="http://www.browserscope.org/?category=network&amp;v=top">browserscope</a></p>
+
+<h2 align="center">
+<a id="-" class="anchor" href="#-" aria-hidden="true"><span class="octicon octicon-link"></span></a>
+ <img src="https://cloud.githubusercontent.com/assets/2560096/9082891/ac4dc26e-3b99-11e5-8178-606270a801c4.png" alt="max number of connection">
+</h2>
 
 <h2>
 <a id="component-of-uri" class="anchor" href="#component-of-uri" aria-hidden="true"><span class="octicon octicon-link"></span></a>Component of URI</h2>
@@ -780,7 +803,7 @@ we just need to do a simple 1x1 pixel request (for example: return a request whe
 These characters are: # $ &amp; + , / : ; = ? @ <a href="http://stackoverflow.com/a/23842171/1748884">more discussion</a>.</p>
 
 <h2 align="center">
-<a id="-" class="anchor" href="#-" aria-hidden="true"><span class="octicon octicon-link"></span></a>
+<a id="--1" class="anchor" href="#--1" aria-hidden="true"><span class="octicon octicon-link"></span></a>
  <img src="http://i.imgur.com/rHWC1r1.png" alt="encodeuri or encodeuricomponent">
 </h2>
 
@@ -853,6 +876,7 @@ These characters are: # $ &amp; + , / : ; = ? @ <a href="http://stackoverflow.co
 <li><a href="http://www.boutell.com/newfaq/misc/urllength.html">What is the maximum length of a URL</a></li>
 <li><a href="http://youmightnotneedjquery.com/">YOU MIGHT NOW NEED JQUERY</a></li>
 <li><a href="https://remysharp.com/2010/10/08/what-is-a-polyfill">What is a Polyfill?</a></li>
+<li><a href="http://peter.sh/experiments/asynchronous-and-deferred-javascript-execution-explained/">Asynchronous and deferred JavaScript execution explained</a></li>
 </ol>
 
 
@@ -878,4 +902,3 @@ These characters are: # $ &amp; + , / : ; = ? @ <a href="http://stackoverflow.co
 
   </body>
 </html>
-
