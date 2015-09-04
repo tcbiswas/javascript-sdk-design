@@ -33,6 +33,14 @@ I'm here to collect and note down the knowledges from my personal experiences. T
 
 <p>Feel free to <a href="https://github.com/huei90/JavaScript-sdk-design/edit/master/README.md">edit</a> or you can drop me suggestions on the <a href="https://github.com/huei90/JavaScript-sdk-design/issues">issue list</a>.</p>
 
+<hr>
+
+<p align="center">
+<a href="http://ctt.ec/GyjRN" title="Click to Tweet">Click to Tweet</a>
+</p>
+
+<hr>
+
 <h2>
 <a id="content" class="anchor" href="#content" aria-hidden="true"><span class="octicon octicon-link"></span></a>Content</h2>
 
@@ -133,6 +141,7 @@ I'm here to collect and note down the knowledges from my personal experiences. T
 <li><a href="#encodeuri-or-encodeuricomponent">EncodeURI or EncodeURIComponent</a></li>
 <li><a href="#you-might-not-need-jquery">YOU MIGHT NOT NEED JQUERY</a></li>
 <li><a href="#load-script-with-callback">Load Script with Callback</a></li>
+<li><a href="#disable-scroll">Disable Scroll</a></li>
 </ul>
 </li>
 <li><a href="#template">Template</a></li>
@@ -195,8 +204,8 @@ We want to optimize the user experience on the website as we don't want our SDK 
 <span class="pl-s1">  (<span class="pl-k">function</span> () {</span>
 <span class="pl-s1">    <span class="pl-k">var</span> s <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>script<span class="pl-pds">'</span></span>);</span>
 <span class="pl-s1">    s.<span class="pl-c1">type</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>text/javascript<span class="pl-pds">'</span></span>;</span>
-<span class="pl-s1">    s.<span class="pl-c1">async</span> <span class="pl-k">=</span> <span class="pl-c1">true</span>;</span>
-<span class="pl-s1">    s.<span class="pl-c1">src</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://xxx.com/sdk.js<span class="pl-pds">'</span></span>;</span>
+<span class="pl-s1">    s.async <span class="pl-k">=</span> <span class="pl-c1">true</span>;</span>
+<span class="pl-s1">    s.src <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://xxx.com/sdk.js<span class="pl-pds">'</span></span>;</span>
 <span class="pl-s1">    <span class="pl-k">var</span> x <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">getElementsByTagName</span>(<span class="pl-s"><span class="pl-pds">'</span>script<span class="pl-pds">'</span></span>)[<span class="pl-c1">0</span>];</span>
 <span class="pl-s1">    x.<span class="pl-c1">parentNode</span>.<span class="pl-c1">insertBefore</span>(s, x);</span>
 <span class="pl-s1">  })();</span>
@@ -242,15 +251,15 @@ you cannot execute your SDK function which script written within the page.</p>
   (<span class="pl-k">function</span> () {
     <span class="pl-k">var</span> s <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>script<span class="pl-pds">'</span></span>);
     s.<span class="pl-c1">type</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>text/javascript<span class="pl-pds">'</span></span>;
-    s.<span class="pl-c1">async</span> <span class="pl-k">=</span> <span class="pl-c1">true</span>;
-    s.<span class="pl-c1">src</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://xxx.com/sdk.js<span class="pl-pds">'</span></span>;
+    s.async <span class="pl-k">=</span> <span class="pl-c1">true</span>;
+    s.src <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://xxx.com/sdk.js<span class="pl-pds">'</span></span>;
     <span class="pl-k">var</span> x <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">getElementsByTagName</span>(<span class="pl-s"><span class="pl-pds">'</span>script<span class="pl-pds">'</span></span>)[<span class="pl-c1">0</span>];
     x.<span class="pl-c1">parentNode</span>.<span class="pl-c1">insertBefore</span>(s, x);
   })();
 
   <span class="pl-c">// execute your script immediately here</span>
-  <span class="pl-c1">SDKName</span>(<span class="pl-s"><span class="pl-pds">'</span>some arguments<span class="pl-pds">'</span></span>);
-<span class="pl-k">&lt;</span>/script<span class="pl-k">&gt;</span></pre></div>
+  SDKName(<span class="pl-s"><span class="pl-pds">'</span>some arguments<span class="pl-pds">'</span></span>);
+<span class="pl-k">&lt;/</span>script<span class="pl-k">&gt;</span></pre></div>
 
 <p>The result will lead to undefined because the <code>SDKName()</code> execute before the script loaded,
 therefore we should do some tricks and make sure the script execute successfully.
@@ -261,37 +270,37 @@ your SDK should handle and execute <code>SDKName.q</code> and reinitial the name
   (<span class="pl-k">function</span> () {
     <span class="pl-c">// add a queue event here</span>
     SDKName <span class="pl-k">=</span> SDKName <span class="pl-k">||</span> <span class="pl-k">function</span> () {
-      (SDKName.<span class="pl-c1">q</span> <span class="pl-k">=</span> SDKName.<span class="pl-c1">q</span> <span class="pl-k">||</span> []).<span class="pl-c1">push</span>(arguments);
+      (SDKName.q <span class="pl-k">=</span> SDKName.q <span class="pl-k">||</span> []).<span class="pl-c1">push</span>(arguments);
     };
     <span class="pl-k">var</span> s <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>script<span class="pl-pds">'</span></span>);
     s.<span class="pl-c1">type</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>text/javascript<span class="pl-pds">'</span></span>;
-    s.<span class="pl-c1">async</span> <span class="pl-k">=</span> <span class="pl-c1">true</span>;
-    s.<span class="pl-c1">src</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://xxx.com/sdk.js<span class="pl-pds">'</span></span>;
+    s.async <span class="pl-k">=</span> <span class="pl-c1">true</span>;
+    s.src <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://xxx.com/sdk.js<span class="pl-pds">'</span></span>;
     <span class="pl-k">var</span> x <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">getElementsByTagName</span>(<span class="pl-s"><span class="pl-pds">'</span>script<span class="pl-pds">'</span></span>)[<span class="pl-c1">0</span>];
     x.<span class="pl-c1">parentNode</span>.<span class="pl-c1">insertBefore</span>(s, x);
   })();
 
   <span class="pl-c">// execute your script immediately here</span>
-  <span class="pl-c1">SDKName</span>(<span class="pl-s"><span class="pl-pds">'</span>some arguments<span class="pl-pds">'</span></span>);
-<span class="pl-k">&lt;</span>/script<span class="pl-k">&gt;</span></pre></div>
+  SDKName(<span class="pl-s"><span class="pl-pds">'</span>some arguments<span class="pl-pds">'</span></span>);
+<span class="pl-k">&lt;/</span>script<span class="pl-k">&gt;</span></pre></div>
 
 <p><strong>Or</strong> using [].push</p>
 
 <div class="highlight highlight-js"><pre><span class="pl-k">&lt;</span>script<span class="pl-k">&gt;</span>
   (<span class="pl-k">function</span> () {
     <span class="pl-c">// add a queue event here</span>
-    SDKName <span class="pl-k">=</span> <span class="pl-c1">window</span>.<span class="pl-c1">SDKName</span> <span class="pl-k">||</span> (<span class="pl-c1">window</span>.<span class="pl-c1">SDKName</span> <span class="pl-k">=</span> []);
+    SDKName <span class="pl-k">=</span> <span class="pl-c1">window</span>.SDKName <span class="pl-k">||</span> (<span class="pl-c1">window</span>.SDKName <span class="pl-k">=</span> []);
     <span class="pl-k">var</span> s <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>script<span class="pl-pds">'</span></span>);
     s.<span class="pl-c1">type</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>text/javascript<span class="pl-pds">'</span></span>;
-    s.<span class="pl-c1">async</span> <span class="pl-k">=</span> <span class="pl-c1">true</span>;
-    s.<span class="pl-c1">src</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://xxx.com/sdk.js<span class="pl-pds">'</span></span>;
+    s.async <span class="pl-k">=</span> <span class="pl-c1">true</span>;
+    s.src <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://xxx.com/sdk.js<span class="pl-pds">'</span></span>;
     <span class="pl-k">var</span> x <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">getElementsByTagName</span>(<span class="pl-s"><span class="pl-pds">'</span>script<span class="pl-pds">'</span></span>)[<span class="pl-c1">0</span>];
     x.<span class="pl-c1">parentNode</span>.<span class="pl-c1">insertBefore</span>(s, x);
   })();
 
   <span class="pl-c">// execute your script immediately here</span>
   SDKName.<span class="pl-c1">push</span>([<span class="pl-s"><span class="pl-pds">'</span>some arguments<span class="pl-pds">'</span></span>]);
-<span class="pl-k">&lt;</span>/script<span class="pl-k">&gt;</span></pre></div>
+<span class="pl-k">&lt;/</span>script<span class="pl-k">&gt;</span></pre></div>
 
 <h2>
 <a id="sdk-versioning" class="anchor" href="#sdk-versioning" aria-hidden="true"><span class="octicon octicon-link"></span></a>SDK Versioning</h2>
@@ -342,6 +351,8 @@ It will be a good developer experience if we can trace the changing API for the 
 prevent using the common word for your namespace to avoid collision with other libraries.</p>
 
 <p>On your SDK mainland, you should use <code>(function () { ... })()</code> to wrap all your source.</p>
+
+<p>This is an increasingly common practice, employed by many popular JavaScript libraries (jQuery, Node.js, etc.). This technique creates a closure around the entire contents of the file which, perhaps most importantly, creates a private namespace and thereby helps avoid potential name clashes between different JavaScript modules and libraries. <a href="http://www.toptal.com/javascript/interview-questions">#</a></p>
 
 <h2>
 <a id="storage-mechanism" class="anchor" href="#storage-mechanism" aria-hidden="true"><span class="octicon octicon-link"></span></a>Storage Mechanism</h2>
@@ -462,7 +473,7 @@ and cookie <code>third=value3</code> in domain <code>http://sub.github.com</code
         <span class="pl-k">return</span> <span class="pl-c1">unescape</span>(allCookie.<span class="pl-c1">substring</span>(index <span class="pl-k">+</span> name.<span class="pl-c1">length</span> <span class="pl-k">+</span> <span class="pl-c1">1</span>, ind1));
     },
     <span class="pl-en">remove</span><span class="pl-k">:</span> <span class="pl-k">function</span>(<span class="pl-smi">name</span>) {
-        <span class="pl-k">if</span> (<span class="pl-v">this</span>.<span class="pl-c1">read</span>(name)) {
+        <span class="pl-k">if</span> (<span class="pl-v">this</span>.read(name)) {
             <span class="pl-v">this</span>.<span class="pl-c1">write</span>(name, <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>, <span class="pl-k">-</span><span class="pl-c1">1</span>, <span class="pl-s"><span class="pl-pds">'</span>/<span class="pl-pds">'</span></span>);
         }
     }
@@ -491,8 +502,8 @@ You can create an iframe inside the website and use <code>postMessage</code> to 
 <div class="highlight highlight-js"><pre><span class="pl-k">var</span> <span class="pl-en">testCanLocalStorage</span> <span class="pl-k">=</span> <span class="pl-k">function</span>() {
    <span class="pl-k">var</span> mod <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>modernizr<span class="pl-pds">'</span></span>;
    <span class="pl-k">try</span> {
-       localStorage.<span class="pl-c1">setItem</span>(mod, mod);
-       localStorage.<span class="pl-c1">removeItem</span>(mod);
+       localStorage.setItem(mod, mod);
+       localStorage.removeItem(mod);
        <span class="pl-k">return</span> <span class="pl-c1">true</span>;
    } <span class="pl-k">catch</span> (e) {
        <span class="pl-k">return</span> <span class="pl-c1">false</span>;
@@ -510,8 +521,8 @@ You can create an iframe inside the website and use <code>postMessage</code> to 
 <div class="highlight highlight-js"><pre><span class="pl-k">var</span> <span class="pl-en">checkCanSessionStorage</span> <span class="pl-k">=</span> <span class="pl-k">function</span>() {
   <span class="pl-k">var</span> mod <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>modernizr<span class="pl-pds">'</span></span>;
   <span class="pl-k">try</span> {
-    sessionStorage.<span class="pl-c1">setItem</span>(mod, mod);
-    sessionStorage.<span class="pl-c1">removeItem</span>(mod);
+    sessionStorage.setItem(mod, mod);
+    sessionStorage.removeItem(mod);
     <span class="pl-k">return</span> <span class="pl-c1">true</span>;
   } <span class="pl-k">catch</span> (e) {
     <span class="pl-k">return</span> <span class="pl-c1">false</span>;
@@ -531,14 +542,14 @@ You can create an iframe inside the website and use <code>postMessage</code> to 
 <div class="highlight highlight-js"><pre><span class="pl-c">// handle IE8+</span>
 <span class="pl-k">function</span> <span class="pl-en">ready</span> (<span class="pl-smi">fn</span>) {
     <span class="pl-k">if</span> (<span class="pl-c1">document</span>.<span class="pl-c1">readyState</span> <span class="pl-k">!=</span> <span class="pl-s"><span class="pl-pds">'</span>loading<span class="pl-pds">'</span></span>) {
-        <span class="pl-c1">fn</span>();
-    } <span class="pl-k">else</span> <span class="pl-k">if</span> (<span class="pl-c1">window</span>.<span class="pl-c1">addEventListener</span>) {
+        fn();
+    } <span class="pl-k">else</span> <span class="pl-k">if</span> (<span class="pl-c1">window</span>.addEventListener) {
         <span class="pl-c">// window.addEventListener('load', fn);</span>
-        <span class="pl-c1">window</span>.<span class="pl-c1">addEventListener</span>(<span class="pl-s"><span class="pl-pds">'</span>DOMContentLoaded<span class="pl-pds">'</span></span>, fn);
+        <span class="pl-c1">window</span>.addEventListener(<span class="pl-s"><span class="pl-pds">'</span>DOMContentLoaded<span class="pl-pds">'</span></span>, fn);
     } <span class="pl-k">else</span> {
         <span class="pl-c1">window</span>.<span class="pl-c1">attachEvent</span>(<span class="pl-s"><span class="pl-pds">'</span>onreadystatechange<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>() {
             <span class="pl-k">if</span> (<span class="pl-c1">document</span>.<span class="pl-c1">readyState</span> <span class="pl-k">!=</span> <span class="pl-s"><span class="pl-pds">'</span>loading<span class="pl-pds">'</span></span>)
-                <span class="pl-c1">fn</span>();
+                fn();
             });
     }
 }</pre></div>
@@ -561,7 +572,7 @@ but there's a better solution to implement it.</p>
 
 <p>Use the Image Beacon to ask browser to perform a method GET Request to get an Image.</p>
 
-<div class="highlight highlight-js"><pre>(<span class="pl-k">new</span> <span class="pl-en">Image</span>()).<span class="pl-c1">src</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://xxxxx.com/collect?id=1111<span class="pl-pds">'</span></span>;</pre></div>
+<div class="highlight highlight-js"><pre>(<span class="pl-k">new</span> <span class="pl-en">Image</span>()).src <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://xxxxx.com/collect?id=1111<span class="pl-pds">'</span></span>;</pre></div>
 
 <p>Some notice for GET Query String, there is the limit of length which is 2048(Basically It depends on different browser and server). You should do some tricks to handle if exceed length limit.</p>
 
@@ -576,9 +587,9 @@ but there's a better solution to implement it.</p>
 <p>For the image load <strong>success/error callback</strong></p>
 
 <div class="highlight highlight-js"><pre><span class="pl-k">var</span> img <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Image</span>();
-img.<span class="pl-c1">src</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://xxxxx.com/collect?id=1111<span class="pl-pds">'</span></span>;
-img.<span class="pl-c1">onload</span> <span class="pl-k">=</span> successCallback;
-img.<span class="pl-c1">onerror</span> <span class="pl-k">=</span> errorCallback;</pre></div>
+img.src <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://xxxxx.com/collect?id=1111<span class="pl-pds">'</span></span>;
+img.onload <span class="pl-k">=</span> successCallback;
+img.onerror <span class="pl-k">=</span> errorCallback;</pre></div>
 
 <h3>
 <a id="single-post" class="anchor" href="#single-post" aria-hidden="true"><span class="octicon octicon-link"></span></a>Single Post</h3>
@@ -612,7 +623,7 @@ form.<span class="pl-c1">submit</span>();</pre></div>
 
     <span class="pl-c">// function to remove the iframe</span>
     <span class="pl-k">var</span> <span class="pl-en">removeIframe</span> <span class="pl-k">=</span> <span class="pl-k">function</span>( <span class="pl-smi">iframe</span> ){
-        iframe.<span class="pl-c1">parentElement</span>.<span class="pl-c1">removeChild</span>(iframe);
+        iframe.parentElement.removeChild(iframe);
     };
 
     <span class="pl-c">// make a iframe...</span>
@@ -620,7 +631,7 @@ form.<span class="pl-c1">submit</span>();</pre></div>
     iframe.<span class="pl-c1">style</span>.<span class="pl-c1">display</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>none<span class="pl-pds">'</span></span>;
 
     <span class="pl-c1">iframe</span>.<span class="pl-en">onload</span> <span class="pl-k">=</span> <span class="pl-k">function</span>(){
-        <span class="pl-k">var</span> iframeDoc <span class="pl-k">=</span> <span class="pl-v">this</span>.<span class="pl-c1">contentWindow</span>.<span class="pl-c1">document</span>;
+        <span class="pl-k">var</span> iframeDoc <span class="pl-k">=</span> <span class="pl-v">this</span>.contentWindow.<span class="pl-c1">document</span>;
 
         <span class="pl-c">// Make a invisible form</span>
         <span class="pl-k">var</span> form <span class="pl-k">=</span> iframeDoc.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>form<span class="pl-pds">'</span></span>);
@@ -640,14 +651,14 @@ form.<span class="pl-c1">submit</span>();</pre></div>
         form.<span class="pl-c1">submit</span>();
         <span class="pl-c">// remove the iframe</span>
         <span class="pl-c1">setTimeout</span>( <span class="pl-k">function</span>(){
-            <span class="pl-c1">removeIframe</span>(iframe);
+            removeIframe(iframe);
         }, <span class="pl-c1">500</span>);
     };
 
     <span class="pl-c1">document</span>.<span class="pl-c1">body</span>.<span class="pl-c1">appendChild</span>(iframe);
 }</pre></div>
 
-<div class="highlight highlight-js"><pre><span class="pl-c1">requestWithoutAjax</span>(<span class="pl-s"><span class="pl-pds">'</span>url/to<span class="pl-pds">'</span></span>, { id<span class="pl-k">:</span> <span class="pl-c1">2</span>, price<span class="pl-k">:</span> <span class="pl-c1">2.5</span>, lastname<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Gamez<span class="pl-pds">'</span></span>});</pre></div>
+<div class="highlight highlight-js"><pre>requestWithoutAjax(<span class="pl-s"><span class="pl-pds">'</span>url/to<span class="pl-pds">'</span></span>, { id<span class="pl-k">:</span> <span class="pl-c1">2</span>, price<span class="pl-k">:</span> <span class="pl-c1">2.5</span>, lastname<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Gamez<span class="pl-pds">'</span></span>});</pre></div>
 
 <h3>
 <a id="iframe" class="anchor" href="#iframe" aria-hidden="true"><span class="octicon octicon-link"></span></a>Iframe</h3>
@@ -658,13 +669,13 @@ form.<span class="pl-c1">submit</span>();</pre></div>
 <span class="pl-k">var</span> body <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">getElementsByTagName</span>(<span class="pl-s"><span class="pl-pds">'</span>body<span class="pl-pds">'</span></span>)[<span class="pl-c1">0</span>];
 
 iframe.<span class="pl-c1">style</span>.<span class="pl-c1">display</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>none<span class="pl-pds">'</span></span>;
-iframe.<span class="pl-c1">src</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://xxxx.com/page<span class="pl-pds">'</span></span>;
+iframe.src <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://xxxx.com/page<span class="pl-pds">'</span></span>;
 <span class="pl-c1">iframe</span>.<span class="pl-en">onreadystatechange</span> <span class="pl-k">=</span> <span class="pl-k">function</span> () {
     <span class="pl-k">if</span> (iframe.<span class="pl-c1">readyState</span> <span class="pl-k">!==</span> <span class="pl-s"><span class="pl-pds">'</span>complete<span class="pl-pds">'</span></span>) {
         <span class="pl-k">return</span>;
     }
 };
-iframe.<span class="pl-c1">onload</span> <span class="pl-k">=</span> loadCallback;
+iframe.onload <span class="pl-k">=</span> loadCallback;
 
 body.<span class="pl-c1">appendChild</span>(iframe);</pre></div>
 
@@ -677,8 +688,8 @@ Just include the JS script link.</p>
 <div class="highlight highlight-js"><pre>  (<span class="pl-k">function</span> () {
     <span class="pl-k">var</span> s <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>script<span class="pl-pds">'</span></span>);
     s.<span class="pl-c1">type</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>text/javascript<span class="pl-pds">'</span></span>;
-    s.<span class="pl-c1">async</span> <span class="pl-k">=</span> <span class="pl-c1">true</span>;
-    s.<span class="pl-c1">src</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>/yourscript?some=parameter<span class="pl-pds">'</span></span>;
+    s.async <span class="pl-k">=</span> <span class="pl-c1">true</span>;
+    s.src <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>/yourscript?some=parameter<span class="pl-pds">'</span></span>;
     <span class="pl-k">var</span> x <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">getElementsByTagName</span>(<span class="pl-s"><span class="pl-pds">'</span>script<span class="pl-pds">'</span></span>)[<span class="pl-c1">0</span>];
     x.<span class="pl-c1">parentNode</span>.<span class="pl-c1">insertBefore</span>(s, x);
   })();</pre></div>
@@ -694,7 +705,7 @@ Just include the JS script link.</p>
 
 <p>Send POST beacon through the API. It's cool.</p>
 
-<div class="highlight highlight-js"><pre><span class="pl-c1">navigator</span>.<span class="pl-c1">sendBeacon</span>(<span class="pl-s"><span class="pl-pds">"</span>/log<span class="pl-pds">"</span></span>, analyticsData);</pre></div>
+<div class="highlight highlight-js"><pre><span class="pl-c1">navigator</span>.sendBeacon(<span class="pl-s"><span class="pl-pds">"</span>/log<span class="pl-pds">"</span></span>, analyticsData);</pre></div>
 
 <h3>
 <a id="xmlhttprequest" class="anchor" href="#xmlhttprequest" aria-hidden="true"><span class="octicon octicon-link"></span></a>XMLHttpRequest</h3>
@@ -719,13 +730,13 @@ Just include the JS script link.</p>
 <p>For example, you are in the page <code>http://github.com/awesome#huei90</code></p>
 
 <div class="highlight highlight-js"><pre><span class="pl-c">// Sending a request with a parameter url which contains current url</span>
-(<span class="pl-k">new</span> <span class="pl-en">Image</span>()).<span class="pl-c1">src</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://yourrequest.com?url=http://github.com/awesome#huei90<span class="pl-pds">'</span></span>;
+(<span class="pl-k">new</span> <span class="pl-en">Image</span>()).src <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://yourrequest.com?url=http://github.com/awesome#huei90<span class="pl-pds">'</span></span>;
 
 <span class="pl-c">// actual request will be without #</span>
-(<span class="pl-k">new</span> <span class="pl-en">Image</span>()).<span class="pl-c1">src</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://yourrequest.com?url=http://github.com/awesome<span class="pl-pds">'</span></span>;
+(<span class="pl-k">new</span> <span class="pl-en">Image</span>()).src <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://yourrequest.com?url=http://github.com/awesome<span class="pl-pds">'</span></span>;
 
 <span class="pl-c">// Solved, encodeURIComponent(url);</span>
-(<span class="pl-k">new</span> <span class="pl-en">Image</span>()).<span class="pl-c1">src</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://yourrequest.com?url=<span class="pl-pds">'</span></span> <span class="pl-k">+</span> <span class="pl-c1">encodeURIComponent</span>(<span class="pl-s"><span class="pl-pds">'</span>http://github.com/awesome#huei90<span class="pl-pds">'</span></span>);</pre></div>
+(<span class="pl-k">new</span> <span class="pl-en">Image</span>()).src <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://yourrequest.com?url=<span class="pl-pds">'</span></span> <span class="pl-k">+</span> encodeURIComponent(<span class="pl-s"><span class="pl-pds">'</span>http://github.com/awesome#huei90<span class="pl-pds">'</span></span>);</pre></div>
 
 <h3>
 <a id="maximum-number-of-connection" class="anchor" href="#maximum-number-of-connection" aria-hidden="true"><span class="octicon octicon-link"></span></a>Maximum Number of Connection</h3>
@@ -874,24 +885,35 @@ These characters are: # $ &amp; + , / : ; = ? @ <a href="http://stackoverflow.co
 
 <div class="highlight highlight-js"><pre><span class="pl-k">function</span> <span class="pl-en">loadScript</span>(<span class="pl-smi">url</span>, <span class="pl-smi">callback</span>) {
   <span class="pl-k">var</span> script <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>script<span class="pl-pds">'</span></span>);
-  script.<span class="pl-c1">async</span> <span class="pl-k">=</span> <span class="pl-c1">true</span>;
-  script.<span class="pl-c1">src</span> <span class="pl-k">=</span> url;
+  script.async <span class="pl-k">=</span> <span class="pl-c1">true</span>;
+  script.src <span class="pl-k">=</span> url;
 
   <span class="pl-k">var</span> entry <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">getElementsByTagName</span>(<span class="pl-s"><span class="pl-pds">'</span>script<span class="pl-pds">'</span></span>)[<span class="pl-c1">0</span>];
   entry.<span class="pl-c1">parentNode</span>.<span class="pl-c1">insertBefore</span>(script, entry);
 
-  script.<span class="pl-c1">onload</span> <span class="pl-k">=</span> <span class="pl-c1">script</span>.<span class="pl-en">onreadystatechange</span> <span class="pl-k">=</span> <span class="pl-k">function</span> () {
+  script.onload <span class="pl-k">=</span> <span class="pl-c1">script</span>.<span class="pl-en">onreadystatechange</span> <span class="pl-k">=</span> <span class="pl-k">function</span> () {
     <span class="pl-k">var</span> rdyState <span class="pl-k">=</span> script.<span class="pl-c1">readyState</span>;
 
     <span class="pl-k">if</span> (<span class="pl-k">!</span>rdyState <span class="pl-k">||</span><span class="pl-sr"> <span class="pl-pds">/</span>complete<span class="pl-k">|</span>loaded<span class="pl-pds">/</span></span>.<span class="pl-c1">test</span>(script.<span class="pl-c1">readyState</span>)) {
-      <span class="pl-c1">callback</span>();
+      callback();
 
       <span class="pl-c">// detach the event handler to avoid memory leaks in IE (http://mng.bz/W8fx)</span>
-      script.<span class="pl-c1">onload</span> <span class="pl-k">=</span> <span class="pl-c1">null</span>;
+      script.onload <span class="pl-k">=</span> <span class="pl-c1">null</span>;
       script.<span class="pl-c1">onreadystatechange</span> <span class="pl-k">=</span> <span class="pl-c1">null</span>;
     }
   };
 }</pre></div>
+
+<h3>
+<a id="disable-scroll" class="anchor" href="#disable-scroll" aria-hidden="true"><span class="octicon octicon-link"></span></a>Disable Scroll</h3>
+
+<p>In web page, use CSS style <code>overflow: hidden</code>, in some mobie web, this css doesn't work, use javascript event.</p>
+
+<div class="highlight highlight-js"><pre><span class="pl-c1">document</span>.addEventListener(<span class="pl-s"><span class="pl-pds">'</span>touchstart<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">e</span>){ e.preventDefault(); }); <span class="pl-c">// prevent scroll</span>
+<span class="pl-c">// or </span>
+<span class="pl-c1">document</span>.<span class="pl-c1">body</span>.addEventListener(<span class="pl-s"><span class="pl-pds">'</span>touchstart<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">e</span>){ e.preventDefault(); }); <span class="pl-c">// prevent scroll</span>
+<span class="pl-c">// use move if you need some touch event</span>
+<span class="pl-c1">document</span>.addEventListener(<span class="pl-s"><span class="pl-pds">'</span>touchmove<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">e</span>){ e.preventDefault(); }); <span class="pl-c">// prevent scroll</span></pre></div>
 
 <h2>
 <a id="template" class="anchor" href="#template" aria-hidden="true"><span class="octicon octicon-link"></span></a>Template</h2>
