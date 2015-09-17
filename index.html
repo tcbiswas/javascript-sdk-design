@@ -96,6 +96,8 @@ I'm here to collect and note down the knowledges from my personal experiences. T
 
 <ul>
 <li><a href="#document-ready">Document Ready</a></li>
+<li><a href="#message-event">Message Event</a></li>
+<li><a href="#orientation-change">Orientation Change</a></li>
 </ul>
 </li>
 <li>
@@ -140,8 +142,11 @@ I'm here to collect and note down the knowledges from my personal experiences. T
 <li><a href="#console-logs-polyfill">Console Logs Polyfill</a></li>
 <li><a href="#encodeuri-or-encodeuricomponent">EncodeURI or EncodeURIComponent</a></li>
 <li><a href="#you-might-not-need-jquery">YOU MIGHT NOT NEED JQUERY</a></li>
+<li><a href="#you-dont-need-jquery">You Don't Need jQuery</a></li>
 <li><a href="#load-script-with-callback">Load Script with Callback</a></li>
 <li><a href="#disable-scroll">Disable Scroll</a></li>
+<li><a href="#once-function">Once Function</a></li>
+<li><a href="#pixel-ratio-density">Pixel Ratio Density</a></li>
 </ul>
 </li>
 <li><a href="#template">Template</a></li>
@@ -200,7 +205,7 @@ We want to optimize the user experience on the website as we don't want our SDK 
 <h3>
 <a id="asynchronous-syntax" class="anchor" href="#asynchronous-syntax" aria-hidden="true"><span class="octicon octicon-link"></span></a>Asynchronous Syntax</h3>
 
-<div class="highlight highlight-html"><pre><span class="pl-s1">&lt;<span class="pl-ent">script</span>&gt;</span>
+<div class="highlight highlight-text-html-basic"><pre><span class="pl-s1">&lt;<span class="pl-ent">script</span>&gt;</span>
 <span class="pl-s1">  (<span class="pl-k">function</span> () {</span>
 <span class="pl-s1">    <span class="pl-k">var</span> s <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>script<span class="pl-pds">'</span></span>);</span>
 <span class="pl-s1">    s.<span class="pl-c1">type</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>text/javascript<span class="pl-pds">'</span></span>;</span>
@@ -213,12 +218,12 @@ We want to optimize the user experience on the website as we don't want our SDK 
 
 <p>Target on modern browser, you can use <code>async</code>.</p>
 
-<div class="highlight highlight-html"><pre>&lt;<span class="pl-ent">script</span> <span class="pl-e">async</span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>http://xxx.com/sdk.js<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">script</span>&gt;</pre></div>
+<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">script</span> <span class="pl-e">async</span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>http://xxx.com/sdk.js<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">script</span>&gt;</pre></div>
 
 <h3>
 <a id="traditional-syntax" class="anchor" href="#traditional-syntax" aria-hidden="true"><span class="octicon octicon-link"></span></a>Traditional Syntax</h3>
 
-<div class="highlight highlight-html"><pre>&lt;<span class="pl-ent">script</span> <span class="pl-e">type</span>=<span class="pl-s"><span class="pl-pds">"</span>text/javascript<span class="pl-pds">"</span></span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>http://xxx.com/sdk.js<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">script</span>&gt;</pre></div>
+<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">script</span> <span class="pl-e">type</span>=<span class="pl-s"><span class="pl-pds">"</span>text/javascript<span class="pl-pds">"</span></span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>http://xxx.com/sdk.js<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">script</span>&gt;</pre></div>
 
 <h3>
 <a id="comparison" class="anchor" href="#comparison" aria-hidden="true"><span class="octicon octicon-link"></span></a>Comparison</h3>
@@ -247,7 +252,7 @@ We want to optimize the user experience on the website as we don't want our SDK 
 <p>When you are using Asynchronous,
 you cannot execute your SDK function which script written within the page.</p>
 
-<div class="highlight highlight-js"><pre><span class="pl-k">&lt;</span>script<span class="pl-k">&gt;</span>
+<div class="highlight highlight-source-js"><pre><span class="pl-k">&lt;</span>script<span class="pl-k">&gt;</span>
   (<span class="pl-k">function</span> () {
     <span class="pl-k">var</span> s <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>script<span class="pl-pds">'</span></span>);
     s.<span class="pl-c1">type</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>text/javascript<span class="pl-pds">'</span></span>;
@@ -266,7 +271,7 @@ therefore we should do some tricks and make sure the script execute successfully
 The event will store in the <code>SDKName.q</code> queue array,
 your SDK should handle and execute <code>SDKName.q</code> and reinitial the namespace <code>SDKName</code>.</p>
 
-<div class="highlight highlight-js"><pre><span class="pl-k">&lt;</span>script<span class="pl-k">&gt;</span>
+<div class="highlight highlight-source-js"><pre><span class="pl-k">&lt;</span>script<span class="pl-k">&gt;</span>
   (<span class="pl-k">function</span> () {
     <span class="pl-c">// add a queue event here</span>
     SDKName <span class="pl-k">=</span> SDKName <span class="pl-k">||</span> <span class="pl-k">function</span> () {
@@ -286,7 +291,7 @@ your SDK should handle and execute <code>SDKName.q</code> and reinitial the name
 
 <p><strong>Or</strong> using [].push</p>
 
-<div class="highlight highlight-js"><pre><span class="pl-k">&lt;</span>script<span class="pl-k">&gt;</span>
+<div class="highlight highlight-source-js"><pre><span class="pl-k">&lt;</span>script<span class="pl-k">&gt;</span>
   (<span class="pl-k">function</span> () {
     <span class="pl-c">// add a queue event here</span>
     SDKName <span class="pl-k">=</span> <span class="pl-c1">window</span>.SDKName <span class="pl-k">||</span> (<span class="pl-c1">window</span>.SDKName <span class="pl-k">=</span> []);
@@ -428,7 +433,7 @@ and cookie <code>third=value3</code> in domain <code>http://sub.github.com</code
 
 <p>Given a domain (Default as current hostname), check whether the cookie is writable.</p>
 
-<div class="highlight highlight-js"><pre><span class="pl-k">var</span> <span class="pl-en">checkCookieWritable</span> <span class="pl-k">=</span> <span class="pl-k">function</span>(<span class="pl-smi">domain</span>) {
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> <span class="pl-en">checkCookieWritable</span> <span class="pl-k">=</span> <span class="pl-k">function</span>(<span class="pl-smi">domain</span>) {
     <span class="pl-k">try</span> {
         <span class="pl-c">// Create cookie</span>
         <span class="pl-c1">document</span>.<span class="pl-c1">cookie</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>cookietest=1<span class="pl-pds">'</span></span> <span class="pl-k">+</span> (domain <span class="pl-k">?</span> <span class="pl-s"><span class="pl-pds">'</span>; domain=<span class="pl-pds">'</span></span> <span class="pl-k">+</span> domain <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>);
@@ -451,7 +456,7 @@ and cookie <code>third=value3</code> in domain <code>http://sub.github.com</code
 
 <p>Snippet Code for write/read/remove cookie script.</p>
 
-<div class="highlight highlight-js"><pre><span class="pl-k">var</span> cookie <span class="pl-k">=</span> {
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> cookie <span class="pl-k">=</span> {
     <span class="pl-en">write</span><span class="pl-k">:</span> <span class="pl-k">function</span>(<span class="pl-smi">name</span>, <span class="pl-smi">value</span>, <span class="pl-smi">days</span>, <span class="pl-smi">domain</span>, <span class="pl-smi">path</span>) {
         <span class="pl-k">var</span> date <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Date</span>();
         days <span class="pl-k">=</span> days <span class="pl-k">||</span> <span class="pl-c1">730</span>; <span class="pl-c">// two years</span>
@@ -499,7 +504,7 @@ You can create an iframe inside the website and use <code>postMessage</code> to 
 
 <p>window.localStorage is not support in every browser, SDK should check available before using it.</p>
 
-<div class="highlight highlight-js"><pre><span class="pl-k">var</span> <span class="pl-en">testCanLocalStorage</span> <span class="pl-k">=</span> <span class="pl-k">function</span>() {
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> <span class="pl-en">testCanLocalStorage</span> <span class="pl-k">=</span> <span class="pl-k">function</span>() {
    <span class="pl-k">var</span> mod <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>modernizr<span class="pl-pds">'</span></span>;
    <span class="pl-k">try</span> {
        localStorage.setItem(mod, mod);
@@ -518,7 +523,7 @@ You can create an iframe inside the website and use <code>postMessage</code> to 
 <h3>
 <a id="check-sessionstorage-writable" class="anchor" href="#check-sessionstorage-writable" aria-hidden="true"><span class="octicon octicon-link"></span></a>Check SessionStorage Writable</h3>
 
-<div class="highlight highlight-js"><pre><span class="pl-k">var</span> <span class="pl-en">checkCanSessionStorage</span> <span class="pl-k">=</span> <span class="pl-k">function</span>() {
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> <span class="pl-en">checkCanSessionStorage</span> <span class="pl-k">=</span> <span class="pl-k">function</span>() {
   <span class="pl-k">var</span> mod <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>modernizr<span class="pl-pds">'</span></span>;
   <span class="pl-k">try</span> {
     sessionStorage.setItem(mod, mod);
@@ -539,7 +544,7 @@ You can create an iframe inside the website and use <code>postMessage</code> to 
 
 <p>Please do make sure that the entire page is finished loading(ready) before starting execution the SDK functions.</p>
 
-<div class="highlight highlight-js"><pre><span class="pl-c">// handle IE8+</span>
+<div class="highlight highlight-source-js"><pre><span class="pl-c">// handle IE8+</span>
 <span class="pl-k">function</span> <span class="pl-en">ready</span> (<span class="pl-smi">fn</span>) {
     <span class="pl-k">if</span> (<span class="pl-c1">document</span>.<span class="pl-c1">readyState</span> <span class="pl-k">!=</span> <span class="pl-s"><span class="pl-pds">'</span>loading<span class="pl-pds">'</span></span>) {
         fn();
@@ -560,6 +565,46 @@ You can create an iframe inside the website and use <code>postMessage</code> to 
 <p><strong>load</strong> event can be used to detect a fully-loaded page</p>
 </blockquote>
 
+<h3>
+<a id="message-event" class="anchor" href="#message-event" aria-hidden="true"><span class="octicon octicon-link"></span></a>Message Event</h3>
+
+<p>It's about the cross-origin communication between iframe and window, read the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage">API documentation</a>.</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">// in the iframe</span>
+parent.postMessage(<span class="pl-s"><span class="pl-pds">"</span>Hello<span class="pl-pds">"</span></span>); <span class="pl-c">// string</span>
+
+<span class="pl-c">// ==========================================</span>
+
+<span class="pl-c">// in the iframe's parent</span>
+<span class="pl-c">// Create IE + others compatible event handler</span>
+<span class="pl-k">var</span> eventMethod <span class="pl-k">=</span> <span class="pl-c1">window</span>.addEventListener <span class="pl-k">?</span> <span class="pl-s"><span class="pl-pds">"</span>addEventListener<span class="pl-pds">"</span></span> <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>attachEvent<span class="pl-pds">"</span></span>;
+<span class="pl-k">var</span> eventer <span class="pl-k">=</span> <span class="pl-c1">window</span>[eventMethod];
+<span class="pl-k">var</span> messageEvent <span class="pl-k">=</span> eventMethod <span class="pl-k">==</span> <span class="pl-s"><span class="pl-pds">"</span>attachEvent<span class="pl-pds">"</span></span> <span class="pl-k">?</span> <span class="pl-s"><span class="pl-pds">"</span>onmessage<span class="pl-pds">"</span></span> <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>message<span class="pl-pds">"</span></span>;
+
+<span class="pl-c">// Listen to message from child window</span>
+eventer(messageEvent,<span class="pl-k">function</span>(<span class="pl-smi">e</span>) {
+  <span class="pl-c">// e.origin , check the message origin</span>
+  <span class="pl-en">console</span><span class="pl-c1">.log</span>(<span class="pl-s"><span class="pl-pds">'</span>parent received message!:  <span class="pl-pds">'</span></span>,e.<span class="pl-c1">data</span>);
+},<span class="pl-c1">false</span>);</pre></div>
+
+<p>The post message data should be <strong>String</strong>, for more advanced used in json, use <strong>JSON String</strong>. Although the modern browser do support <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm">Structured Clone Algorithm</a> on the parameter, but not the 100% browser.</p>
+
+<h3>
+<a id="orientation-change" class="anchor" href="#orientation-change" aria-hidden="true"><span class="octicon octicon-link"></span></a>Orientation Change</h3>
+
+<p>Detect device orientation change</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c1">window</span>.addEventListener(<span class="pl-s"><span class="pl-pds">'</span>orientationchange<span class="pl-pds">'</span></span>, fn);</pre></div>
+
+<p>Get Orientation Rotate Degree</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c1">window</span>.orientation; <span class="pl-c">// =&gt; 90, -90, 0</span></pre></div>
+
+<p>Screen portrait-primary, portrait-secondary, landscape-primary, landscape-secondary (Experimental)</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">// https://developer.mozilla.org/en-US/docs/Web/API/Screen/orientation</span>
+<span class="pl-k">var</span> orientation <span class="pl-k">=</span> <span class="pl-c1">screen</span>.orientation <span class="pl-k">||</span> <span class="pl-c1">screen</span>.mozOrientation <span class="pl-k">||</span> <span class="pl-c1">screen</span>.msOrientation;</pre></div>
+
 <h2>
 <a id="request" class="anchor" href="#request" aria-hidden="true"><span class="octicon octicon-link"></span></a>Request</h2>
 
@@ -572,11 +617,11 @@ but there's a better solution to implement it.</p>
 
 <p>Use the Image Beacon to ask browser to perform a method GET Request to get an Image.</p>
 
-<div class="highlight highlight-js"><pre>(<span class="pl-k">new</span> <span class="pl-en">Image</span>()).src <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://xxxxx.com/collect?id=1111<span class="pl-pds">'</span></span>;</pre></div>
+<div class="highlight highlight-source-js"><pre>(<span class="pl-k">new</span> <span class="pl-en">Image</span>()).src <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://xxxxx.com/collect?id=1111<span class="pl-pds">'</span></span>;</pre></div>
 
 <p>Some notice for GET Query String, there is the limit of length which is 2048(Basically It depends on different browser and server). You should do some tricks to handle if exceed length limit.</p>
 
-<div class="highlight highlight-js"><pre><span class="pl-k">if</span> (length <span class="pl-k">&gt;</span> <span class="pl-c1">2048</span>) {
+<div class="highlight highlight-source-js"><pre><span class="pl-k">if</span> (length <span class="pl-k">&gt;</span> <span class="pl-c1">2048</span>) {
     <span class="pl-c">// do Multiple Post (form)</span>
 } <span class="pl-k">else</span> {
     <span class="pl-c">// do Image Beacon</span>
@@ -586,7 +631,7 @@ but there's a better solution to implement it.</p>
 
 <p>For the image load <strong>success/error callback</strong></p>
 
-<div class="highlight highlight-js"><pre><span class="pl-k">var</span> img <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Image</span>();
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> img <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Image</span>();
 img.src <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://xxxxx.com/collect?id=1111<span class="pl-pds">'</span></span>;
 img.onload <span class="pl-k">=</span> successCallback;
 img.onerror <span class="pl-k">=</span> errorCallback;</pre></div>
@@ -596,7 +641,7 @@ img.onerror <span class="pl-k">=</span> errorCallback;</pre></div>
 
 <p>Use the native form element method POST to send a key value.</p>
 
-<div class="highlight highlight-js"><pre><span class="pl-k">var</span> form <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>form<span class="pl-pds">'</span></span>);
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> form <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>form<span class="pl-pds">'</span></span>);
 <span class="pl-k">var</span> input <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>input<span class="pl-pds">'</span></span>);
 
 form.<span class="pl-c1">style</span>.<span class="pl-c1">display</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>none<span class="pl-pds">'</span></span>;
@@ -616,7 +661,7 @@ form.<span class="pl-c1">submit</span>();</pre></div>
 
 <p>The Service is often complex, we need to send more data through method POST.</p>
 
-<div class="highlight highlight-js"><pre><span class="pl-k">function</span> <span class="pl-en">requestWithoutAjax</span>( <span class="pl-smi">url</span>, <span class="pl-smi">params</span>, <span class="pl-smi">method</span> ){
+<div class="highlight highlight-source-js"><pre><span class="pl-k">function</span> <span class="pl-en">requestWithoutAjax</span>( <span class="pl-smi">url</span>, <span class="pl-smi">params</span>, <span class="pl-smi">method</span> ){
 
     params <span class="pl-k">=</span> params <span class="pl-k">||</span> {};
     method <span class="pl-k">=</span> method <span class="pl-k">||</span> <span class="pl-s"><span class="pl-pds">"</span>post<span class="pl-pds">"</span></span>;
@@ -658,14 +703,14 @@ form.<span class="pl-c1">submit</span>();</pre></div>
     <span class="pl-c1">document</span>.<span class="pl-c1">body</span>.<span class="pl-c1">appendChild</span>(iframe);
 }</pre></div>
 
-<div class="highlight highlight-js"><pre>requestWithoutAjax(<span class="pl-s"><span class="pl-pds">'</span>url/to<span class="pl-pds">'</span></span>, { id<span class="pl-k">:</span> <span class="pl-c1">2</span>, price<span class="pl-k">:</span> <span class="pl-c1">2.5</span>, lastname<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Gamez<span class="pl-pds">'</span></span>});</pre></div>
+<div class="highlight highlight-source-js"><pre>requestWithoutAjax(<span class="pl-s"><span class="pl-pds">'</span>url/to<span class="pl-pds">'</span></span>, { id<span class="pl-k">:</span> <span class="pl-c1">2</span>, price<span class="pl-k">:</span> <span class="pl-c1">2.5</span>, lastname<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Gamez<span class="pl-pds">'</span></span>});</pre></div>
 
 <h3>
 <a id="iframe" class="anchor" href="#iframe" aria-hidden="true"><span class="octicon octicon-link"></span></a>Iframe</h3>
 
 <p>When you need to generate a content within the page, you can use iframe to embed your html.</p>
 
-<div class="highlight highlight-js"><pre><span class="pl-k">var</span> iframe <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>iframe<span class="pl-pds">'</span></span>);
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> iframe <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>iframe<span class="pl-pds">'</span></span>);
 <span class="pl-k">var</span> body <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">getElementsByTagName</span>(<span class="pl-s"><span class="pl-pds">'</span>body<span class="pl-pds">'</span></span>)[<span class="pl-c1">0</span>];
 
 iframe.<span class="pl-c1">style</span>.<span class="pl-c1">display</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>none<span class="pl-pds">'</span></span>;
@@ -685,7 +730,7 @@ body.<span class="pl-c1">appendChild</span>(iframe);</pre></div>
 <p>This is the case that your server need to response JavaScript code and let the client browser execute it.
 Just include the JS script link.</p>
 
-<div class="highlight highlight-js"><pre>  (<span class="pl-k">function</span> () {
+<div class="highlight highlight-source-js"><pre>  (<span class="pl-k">function</span> () {
     <span class="pl-k">var</span> s <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>script<span class="pl-pds">'</span></span>);
     s.<span class="pl-c1">type</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>text/javascript<span class="pl-pds">'</span></span>;
     s.async <span class="pl-k">=</span> <span class="pl-c1">true</span>;
@@ -705,7 +750,7 @@ Just include the JS script link.</p>
 
 <p>Send POST beacon through the API. It's cool.</p>
 
-<div class="highlight highlight-js"><pre><span class="pl-c1">navigator</span>.sendBeacon(<span class="pl-s"><span class="pl-pds">"</span>/log<span class="pl-pds">"</span></span>, analyticsData);</pre></div>
+<div class="highlight highlight-source-js"><pre><span class="pl-c1">navigator</span>.sendBeacon(<span class="pl-s"><span class="pl-pds">"</span>/log<span class="pl-pds">"</span></span>, analyticsData);</pre></div>
 
 <h3>
 <a id="xmlhttprequest" class="anchor" href="#xmlhttprequest" aria-hidden="true"><span class="octicon octicon-link"></span></a>XMLHttpRequest</h3>
@@ -729,7 +774,7 @@ Just include the JS script link.</p>
 
 <p>For example, you are in the page <code>http://github.com/awesome#huei90</code></p>
 
-<div class="highlight highlight-js"><pre><span class="pl-c">// Sending a request with a parameter url which contains current url</span>
+<div class="highlight highlight-source-js"><pre><span class="pl-c">// Sending a request with a parameter url which contains current url</span>
 (<span class="pl-k">new</span> <span class="pl-en">Image</span>()).src <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://yourrequest.com?url=http://github.com/awesome#huei90<span class="pl-pds">'</span></span>;
 
 <span class="pl-c">// actual request will be without #</span>
@@ -776,12 +821,12 @@ Just include the JS script link.</p>
 
 <p>Here's a simplest by using the native URL() Interface but it doesn't support on all the browsers.</p>
 
-<div class="highlight highlight-js"><pre><span class="pl-k">var</span> parser <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">URL</span>(<span class="pl-s"><span class="pl-pds">'</span>http://github.com/huei90<span class="pl-pds">'</span></span>);
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> parser <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">URL</span>(<span class="pl-s"><span class="pl-pds">'</span>http://github.com/huei90<span class="pl-pds">'</span></span>);
 parser.<span class="pl-c1">hostname</span>; <span class="pl-c">// =&gt; "github.com"</span></pre></div>
 
 <p>For the browser which doesn't have the URL() Interface, try DOM createElement('a').</p>
 
-<div class="highlight highlight-js"><pre><span class="pl-k">var</span> parser <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>a<span class="pl-pds">'</span></span>);
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> parser <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>a<span class="pl-pds">'</span></span>);
 parser.<span class="pl-c1">href</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>http://github.com/huei90<span class="pl-pds">"</span></span>;
 parser.<span class="pl-c1">hostname</span>; <span class="pl-c">// =&gt; "github.com"</span></pre></div>
 
@@ -826,7 +871,7 @@ parser.<span class="pl-c1">hostname</span>; <span class="pl-c">// =&gt; "github.
 <p>Sometimes, we don't want our developers include all the SDK source,
 we just need to do a simple 1x1 pixel request (for example: return a request when landing on thank you/last page). All we need to do is ask the developer to include an image file with our url link.</p>
 
-<div class="highlight highlight-html"><pre>&lt;<span class="pl-ent">img</span> <span class="pl-e">height</span>=<span class="pl-s"><span class="pl-pds">"</span>1<span class="pl-pds">"</span></span> <span class="pl-e">width</span>=<span class="pl-s"><span class="pl-pds">"</span>1<span class="pl-pds">"</span></span> <span class="pl-e">alt</span>=<span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span> <span class="pl-e">style</span>=<span class="pl-s"><span class="pl-pds">"</span>display:none<span class="pl-pds">"</span></span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>https://yourUrlLink.com/t?timestamp=1234567890<span class="pl-ii">&amp;</span>type=page1<span class="pl-ii">&amp;</span>currency=USD<span class="pl-ii">&amp;</span>noscript=1<span class="pl-pds">"</span></span> /&gt;</pre></div>
+<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">img</span> <span class="pl-e">height</span>=<span class="pl-s"><span class="pl-pds">"</span>1<span class="pl-pds">"</span></span> <span class="pl-e">width</span>=<span class="pl-s"><span class="pl-pds">"</span>1<span class="pl-pds">"</span></span> <span class="pl-e">alt</span>=<span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span> <span class="pl-e">style</span>=<span class="pl-s"><span class="pl-pds">"</span>display:none<span class="pl-pds">"</span></span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>https://yourUrlLink.com/t?timestamp=1234567890<span class="pl-ii">&amp;</span>type=page1<span class="pl-ii">&amp;</span>currency=USD<span class="pl-ii">&amp;</span>noscript=1<span class="pl-pds">"</span></span> /&gt;</pre></div>
 
 <h3>
 <a id="browsersync" class="anchor" href="#browsersync" aria-hidden="true"><span class="octicon octicon-link"></span></a>BrowserSync</h3>
@@ -850,7 +895,7 @@ we just need to do a simple 1x1 pixel request (for example: return a request whe
 
 <p>It's not a real polyfill, just make sure that calling <code>console.log</code> API doesn't throw error event to client side.</p>
 
-<div class="highlight highlight-js"><pre><span class="pl-k">if</span> (<span class="pl-k">typeof</span> <span class="pl-en">console</span> <span class="pl-k">===</span> <span class="pl-s"><span class="pl-pds">"</span>undefined<span class="pl-pds">"</span></span>) {
+<div class="highlight highlight-source-js"><pre><span class="pl-k">if</span> (<span class="pl-k">typeof</span> <span class="pl-en">console</span> <span class="pl-k">===</span> <span class="pl-s"><span class="pl-pds">"</span>undefined<span class="pl-pds">"</span></span>) {
     <span class="pl-k">var</span> <span class="pl-en">f</span> <span class="pl-k">=</span> <span class="pl-k">function</span>() {};
     <span class="pl-en">console</span> <span class="pl-k">=</span> {
         log<span class="pl-k">:</span> f,
@@ -879,11 +924,27 @@ These characters are: # $ &amp; + , / : ; = ? @ <a href="http://stackoverflow.co
 <p>As the title said, <a href="http://youmightnotneedjquery.com/">you might not need jquery</a>. It's really useful if you are looking for  some utilities code - <a href="http://youmightnotneedjquery.com/#AJAX">AJAX</a> <a href="http://youmightnotneedjquery.com/#effects">EFFECTS</a>, <a href="http://youmightnotneedjquery.com/#elements">ELEMENTS</a>, <a href="http://youmightnotneedjquery.com/#events">EVENTS</a>, <a href="http://youmightnotneedjquery.com/#utils">UTILS</a></p>
 
 <h3>
+<a id="you-dont-need-jquery" class="anchor" href="#you-dont-need-jquery" aria-hidden="true"><span class="octicon octicon-link"></span></a>You Don't Need jQuery</h3>
+
+<blockquote>
+<p>Free yourself from the chains of jQuery by embracing and understanding the modern Web API and discovering various directed libraries to help you fill in the gaps.</p>
+</blockquote>
+
+<p><a href="http://blog.garstasio.com/you-dont-need-jquery/">http://blog.garstasio.com/you-dont-need-jquery/</a></p>
+
+<p>Useful Tips</p>
+
+<ol>
+<li><a href="http://blog.garstasio.com/you-dont-need-jquery/selectors/">Selecting Elements</a></li>
+<li><a href="http://blog.garstasio.com/you-dont-need-jquery/dom-manipulation/">DOM Manipulation</a></li>
+</ol>
+
+<h3>
 <a id="load-script-with-callback" class="anchor" href="#load-script-with-callback" aria-hidden="true"><span class="octicon octicon-link"></span></a>Load Script with Callback</h3>
 
 <p>It's similar to <a href="#asynchronous-syntax">asynchrnous script loading</a> with addition callback event</p>
 
-<div class="highlight highlight-js"><pre><span class="pl-k">function</span> <span class="pl-en">loadScript</span>(<span class="pl-smi">url</span>, <span class="pl-smi">callback</span>) {
+<div class="highlight highlight-source-js"><pre><span class="pl-k">function</span> <span class="pl-en">loadScript</span>(<span class="pl-smi">url</span>, <span class="pl-smi">callback</span>) {
   <span class="pl-k">var</span> script <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>script<span class="pl-pds">'</span></span>);
   script.async <span class="pl-k">=</span> <span class="pl-c1">true</span>;
   script.src <span class="pl-k">=</span> url;
@@ -909,11 +970,51 @@ These characters are: # $ &amp; + , / : ; = ? @ <a href="http://stackoverflow.co
 
 <p>In web page, use CSS style <code>overflow: hidden</code>, in some mobie web, this css doesn't work, use javascript event.</p>
 
-<div class="highlight highlight-js"><pre><span class="pl-c1">document</span>.addEventListener(<span class="pl-s"><span class="pl-pds">'</span>touchstart<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">e</span>){ e.preventDefault(); }); <span class="pl-c">// prevent scroll</span>
+<div class="highlight highlight-source-js"><pre><span class="pl-c1">document</span>.addEventListener(<span class="pl-s"><span class="pl-pds">'</span>touchstart<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">e</span>){ e.preventDefault(); }); <span class="pl-c">// prevent scroll</span>
 <span class="pl-c">// or </span>
 <span class="pl-c1">document</span>.<span class="pl-c1">body</span>.addEventListener(<span class="pl-s"><span class="pl-pds">'</span>touchstart<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">e</span>){ e.preventDefault(); }); <span class="pl-c">// prevent scroll</span>
 <span class="pl-c">// use move if you need some touch event</span>
 <span class="pl-c1">document</span>.addEventListener(<span class="pl-s"><span class="pl-pds">'</span>touchmove<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">e</span>){ e.preventDefault(); }); <span class="pl-c">// prevent scroll</span></pre></div>
+
+<h3>
+<a id="once-function" class="anchor" href="#once-function" aria-hidden="true"><span class="octicon octicon-link"></span></a>Once Function</h3>
+
+<p>Here show how to implement the function <code>once</code></p>
+
+<blockquote>
+<p>Every so often you have a function which you only want to run once.  Oftentimes these functions are in the form of event listeners which may be difficult to manage.  Of course if they were easy to manage, you'd just remove the listeners but that's a perfect world and sometimes you simply want the ability to only allow a function to be called once.  Here's the JavaScript function to make that possible!</p>
+</blockquote>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">// Copy from DWB</span>
+<span class="pl-c">// http://davidwalsh.name/javascript-once</span>
+<span class="pl-k">function</span> <span class="pl-en">once</span>(<span class="pl-smi">fn</span>, <span class="pl-smi">context</span>) { 
+    <span class="pl-k">var</span> result;
+
+    <span class="pl-k">return</span> <span class="pl-k">function</span>() { 
+        <span class="pl-k">if</span>(fn) {
+            result <span class="pl-k">=</span> fn.<span class="pl-c1">apply</span>(context <span class="pl-k">||</span> <span class="pl-v">this</span>, arguments);
+            fn <span class="pl-k">=</span> <span class="pl-c1">null</span>;
+        }
+
+        <span class="pl-k">return</span> result;
+    };
+}
+
+<span class="pl-c">// Usage</span>
+<span class="pl-k">var</span> canOnlyFireOnce <span class="pl-k">=</span> once(<span class="pl-k">function</span>() {
+    <span class="pl-en">console</span><span class="pl-c1">.log</span>(<span class="pl-s"><span class="pl-pds">'</span>Fired!<span class="pl-pds">'</span></span>);
+});
+
+canOnlyFireOnce(); <span class="pl-c">// "Fired!"</span>
+canOnlyFireOnce(); <span class="pl-c">// nada</span></pre></div>
+
+<h3>
+<a id="pixel-ratio-density" class="anchor" href="#pixel-ratio-density" aria-hidden="true"><span class="octicon octicon-link"></span></a>Pixel Ratio Density</h3>
+
+<p>If you stuck on the term pixel, ratio, densty, dimension, what while developing mobile web, try understand the video, it may helps.</p>
+
+<p><a href="https://www.youtube.com/watch?v=u0rfDeaxehc">Device pixel ratio - Mobile Web Development</a> <br>
+<a href="https://www.youtube.com/watch?t=34&amp;v=UUF4jD-xoYc">Mobile device pixels - Mobile Web Development</a></p>
 
 <h2>
 <a id="template" class="anchor" href="#template" aria-hidden="true"><span class="octicon octicon-link"></span></a>Template</h2>
