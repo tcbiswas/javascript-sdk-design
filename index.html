@@ -56,6 +56,7 @@ I'm here to collect and note down the knowledges from my personal experiences. T
 <li><a href="#traditional-syntax">Traditional Syntax</a></li>
 <li><a href="#comparison">Comparison</a></li>
 <li><a href="#problem-of-asynchronous">Problem of Asynchronous</a></li>
+<li><a href="#others">Others</a></li>
 </ul>
 </li>
 <li><a href="#sdk-versioning">SDK Versioning</a></li>
@@ -98,6 +99,7 @@ I'm here to collect and note down the knowledges from my personal experiences. T
 <li><a href="#document-ready">Document Ready</a></li>
 <li><a href="#message-event">Message Event</a></li>
 <li><a href="#orientation-change">Orientation Change</a></li>
+<li><a href="#disable-scroll">Disable Scroll</a></li>
 </ul>
 </li>
 <li>
@@ -129,6 +131,7 @@ I'm here to collect and note down the knowledges from my personal experiences. T
 <li><a href="#developer-tools">Developer Tools</a></li>
 <li><a href="#console-logs">Console Logs</a></li>
 <li><a href="#debugging-proxy">Debugging Proxy</a></li>
+<li><a href="#browsersync">BrowserSync</a></li>
 </ul>
 </li>
 <li>
@@ -136,7 +139,6 @@ I'm here to collect and note down the knowledges from my personal experiences. T
 
 <ul>
 <li><a href="#piggyback">Piggyback</a></li>
-<li><a href="#browsersync">BrowserSync</a></li>
 <li><a href="#page-visibility-api">Page Visibility API</a></li>
 <li><a href="#document-referrer">Document Referrer</a></li>
 <li><a href="#console-logs-polyfill">Console Logs Polyfill</a></li>
@@ -144,9 +146,10 @@ I'm here to collect and note down the knowledges from my personal experiences. T
 <li><a href="#you-might-not-need-jquery">YOU MIGHT NOT NEED JQUERY</a></li>
 <li><a href="#you-dont-need-jquery">You Don't Need jQuery</a></li>
 <li><a href="#load-script-with-callback">Load Script with Callback</a></li>
-<li><a href="#disable-scroll">Disable Scroll</a></li>
 <li><a href="#once-function">Once Function</a></li>
 <li><a href="#pixel-ratio-density">Pixel Ratio Density</a></li>
+<li><a href="#get-style-value">Get Style Value</a></li>
+<li><a href="#check-if-element-in-viewport">Check if Element in Viewport</a></li>
 </ul>
 </li>
 <li><a href="#template">Template</a></li>
@@ -306,6 +309,51 @@ your SDK should handle and execute <code>SDKName.q</code> and reinitial the name
   <span class="pl-c">// execute your script immediately here</span>
   SDKName.<span class="pl-c1">push</span>([<span class="pl-s"><span class="pl-pds">'</span>some arguments<span class="pl-pds">'</span></span>]);
 <span class="pl-k">&lt;/</span>script<span class="pl-k">&gt;</span></pre></div>
+
+<h3>
+<a id="others" class="anchor" href="#others" aria-hidden="true"><span class="octicon octicon-link"></span></a>Others</h3>
+
+<p>There are other different ways to include a script</p>
+
+<p><strong>Import in ES2015</strong></p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">import</span> <span class="pl-s"><span class="pl-pds">"</span>your-sdk<span class="pl-pds">"</span></span>;</pre></div>
+
+<p><strong>Modular include a Script</strong></p>
+
+<p>For full source code, see this awesome tutorial. <a href="https://libraryinstitute.wordpress.com/2010/12/01/loading-javascript-modules/">Loading JavaScript Modules</a></p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c1">module</span>(<span class="pl-s"><span class="pl-pds">'</span>sdk.js<span class="pl-pds">'</span></span>,[<span class="pl-s"><span class="pl-pds">'</span>sdk-track.js<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>sdk-beacon.js<span class="pl-pds">'</span></span>],<span class="pl-k">function</span>(<span class="pl-smi">track</span>, <span class="pl-smi">beacon</span>) {
+  <span class="pl-c">// sdk definitions, split into local and global/exported definitions</span>
+  <span class="pl-c">// local definitions</span>
+  <span class="pl-c">// exports</span>
+});
+
+<span class="pl-c">// you should contain this "module" method</span>
+(<span class="pl-k">function</span> () {
+
+  <span class="pl-k">var</span> modules <span class="pl-k">=</span> {}; <span class="pl-c">// private record of module data</span>
+
+  <span class="pl-c">// modules are functions with additional information</span>
+  <span class="pl-k">function</span> <span class="pl-en">module</span>(<span class="pl-smi">name</span>,<span class="pl-smi">imports</span>,<span class="pl-smi">mod</span>) {
+
+    <span class="pl-c">// record module information</span>
+    <span class="pl-c1">window</span>.<span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">'</span>found module <span class="pl-pds">'</span></span><span class="pl-k">+</span>name);
+    modules[name] <span class="pl-k">=</span> {name<span class="pl-k">:</span>name, imports<span class="pl-k">:</span> imports, mod<span class="pl-k">:</span> mod};
+
+    <span class="pl-c">// trigger loading of import dependencies</span>
+    <span class="pl-k">for</span> (<span class="pl-k">var</span> imp <span class="pl-k">in</span> imports) loadModule(imports[imp]);
+
+    <span class="pl-c">// check whether this was the last module to be loaded</span>
+    <span class="pl-c">// in a given dependency group</span>
+    loadedModule(name);
+  }
+
+  <span class="pl-c">// function loadModule</span>
+  <span class="pl-c">// function loadedModule</span>
+
+  <span class="pl-c1">window</span>.module <span class="pl-k">=</span> <span class="pl-c1">module</span>;
+})();</pre></div>
 
 <h2>
 <a id="sdk-versioning" class="anchor" href="#sdk-versioning" aria-hidden="true"><span class="octicon octicon-link"></span></a>SDK Versioning</h2>
@@ -584,7 +632,7 @@ parent.postMessage(<span class="pl-s"><span class="pl-pds">"</span>Hello<span cl
 <span class="pl-c">// Listen to message from child window</span>
 eventer(messageEvent,<span class="pl-k">function</span>(<span class="pl-smi">e</span>) {
   <span class="pl-c">// e.origin , check the message origin</span>
-  <span class="pl-en">console</span><span class="pl-c1">.log</span>(<span class="pl-s"><span class="pl-pds">'</span>parent received message!:  <span class="pl-pds">'</span></span>,e.<span class="pl-c1">data</span>);
+  <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">'</span>parent received message!:  <span class="pl-pds">'</span></span>,e.<span class="pl-c1">data</span>);
 },<span class="pl-c1">false</span>);</pre></div>
 
 <p>The post message data should be <strong>String</strong>, for more advanced used in json, use <strong>JSON String</strong>. Although the modern browser do support <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm">Structured Clone Algorithm</a> on the parameter, but not the 100% browser.</p>
@@ -604,6 +652,17 @@ eventer(messageEvent,<span class="pl-k">function</span>(<span class="pl-smi">e</
 
 <div class="highlight highlight-source-js"><pre><span class="pl-c">// https://developer.mozilla.org/en-US/docs/Web/API/Screen/orientation</span>
 <span class="pl-k">var</span> orientation <span class="pl-k">=</span> <span class="pl-c1">screen</span>.orientation <span class="pl-k">||</span> <span class="pl-c1">screen</span>.mozOrientation <span class="pl-k">||</span> <span class="pl-c1">screen</span>.msOrientation;</pre></div>
+
+<h3>
+<a id="disable-scroll" class="anchor" href="#disable-scroll" aria-hidden="true"><span class="octicon octicon-link"></span></a>Disable Scroll</h3>
+
+<p>In web page, use CSS style <code>overflow: hidden</code>, in some mobie web, this css doesn't work, use javascript event.</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c1">document</span>.addEventListener(<span class="pl-s"><span class="pl-pds">'</span>touchstart<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">e</span>){ e.preventDefault(); }); <span class="pl-c">// prevent scroll</span>
+<span class="pl-c">// or </span>
+<span class="pl-c1">document</span>.<span class="pl-c1">body</span>.addEventListener(<span class="pl-s"><span class="pl-pds">'</span>touchstart<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">e</span>){ e.preventDefault(); }); <span class="pl-c">// prevent scroll</span>
+<span class="pl-c">// use move if you need some touch event</span>
+<span class="pl-c1">document</span>.addEventListener(<span class="pl-s"><span class="pl-pds">'</span>touchmove<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">e</span>){ e.preventDefault(); }); <span class="pl-c">// prevent scroll</span></pre></div>
 
 <h2>
 <a id="request" class="anchor" href="#request" aria-hidden="true"><span class="octicon octicon-link"></span></a>Request</h2>
@@ -724,6 +783,38 @@ iframe.onload <span class="pl-k">=</span> loadCallback;
 
 body.<span class="pl-c1">appendChild</span>(iframe);</pre></div>
 
+<p><strong>Remove extra margin from INSIDE an iframe</strong></p>
+
+<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">iframe</span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>...<span class="pl-pds">"</span></span>
+ <span class="pl-e">marginwidth</span>=<span class="pl-s"><span class="pl-pds">"</span>0<span class="pl-pds">"</span></span>
+ <span class="pl-e">marginheight</span>=<span class="pl-s"><span class="pl-pds">"</span>0<span class="pl-pds">"</span></span>
+ <span class="pl-e">hspace</span>=<span class="pl-s"><span class="pl-pds">"</span>0<span class="pl-pds">"</span></span>
+ <span class="pl-e">vspace</span>=<span class="pl-s"><span class="pl-pds">"</span>0<span class="pl-pds">"</span></span>
+ <span class="pl-e">frameborder</span>=<span class="pl-s"><span class="pl-pds">"</span>0<span class="pl-pds">"</span></span>
+ <span class="pl-e">scrolling</span>=<span class="pl-s"><span class="pl-pds">"</span>no<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">iframe</span>&gt;</pre></div>
+
+<p><strong>Putting html content into an iframe</strong></p>
+
+<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">iframe</span> <span class="pl-e">id</span>=<span class="pl-s"><span class="pl-pds">"</span>iframe<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">iframe</span>&gt;
+
+<span class="pl-s1">&lt;<span class="pl-ent">script</span>&gt;</span>
+<span class="pl-s1">  <span class="pl-k">var</span> html_string<span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>content &lt;script&gt;alert(location.href);&lt;/script&gt;<span class="pl-pds">"</span></span>;</span>
+<span class="pl-s1">  <span class="pl-c1">document</span>.<span class="pl-c1">getElementById</span>(<span class="pl-s"><span class="pl-pds">'</span>iframe<span class="pl-pds">'</span></span>).src <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>data:text/html;charset=utf-8,<span class="pl-pds">"</span></span> <span class="pl-k">+</span> <span class="pl-c1">escape</span>(html_string);</span>
+<span class="pl-s1">  <span class="pl-c">// alert data:text/html;charset=utf-8.....</span></span>
+<span class="pl-s1">  <span class="pl-c">// access cookie get ERROR</span></span>
+<span class="pl-s1"></span>
+<span class="pl-s1">  <span class="pl-k">var</span> doc <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">getElementById</span>(<span class="pl-s"><span class="pl-pds">'</span>iframe<span class="pl-pds">'</span></span>).contentWindow.<span class="pl-c1">document</span>;</span>
+<span class="pl-s1">  doc.<span class="pl-c1">open</span>();</span>
+<span class="pl-s1">  doc.<span class="pl-c1">write</span>(<span class="pl-s"><span class="pl-pds">'</span>&lt;body&gt;Test&lt;script&gt;alert(location.href);&lt;/script&gt;&lt;/body&gt;<span class="pl-pds">'</span></span>);</span>
+<span class="pl-s1">  doc.<span class="pl-c1">close</span>();</span>
+<span class="pl-s1">  <span class="pl-c">// alert "top window url"</span></span>
+<span class="pl-s1"></span>
+<span class="pl-s1">  <span class="pl-k">var</span> iframe <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>iframe<span class="pl-pds">'</span></span>);</span>
+<span class="pl-s1">  iframe.src <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>javascript:;<span class="pl-cce">\'</span><span class="pl-pds">'</span></span> <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">'</span>&lt;html&gt;&lt;body&gt;&lt;script&gt;alert(location.href);&lt;/body&gt;&lt;/html&gt;<span class="pl-pds">'</span></span> <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\'</span><span class="pl-pds">'</span></span>;</span>
+<span class="pl-s1">  <span class="pl-c1">document</span>.<span class="pl-c1">body</span>.<span class="pl-c1">appendChild</span>(iframe);</span>
+<span class="pl-s1">  <span class="pl-c">// alert "about:blank"</span></span>
+<span class="pl-s1">&lt;/<span class="pl-ent">script</span>&gt;</span></pre></div>
+
 <h3>
 <a id="script-jsonp" class="anchor" href="#script-jsonp" aria-hidden="true"><span class="octicon octicon-link"></span></a>Script jsonp</h3>
 
@@ -734,10 +825,20 @@ Just include the JS script link.</p>
     <span class="pl-k">var</span> s <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>script<span class="pl-pds">'</span></span>);
     s.<span class="pl-c1">type</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>text/javascript<span class="pl-pds">'</span></span>;
     s.async <span class="pl-k">=</span> <span class="pl-c1">true</span>;
-    s.src <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>/yourscript?some=parameter<span class="pl-pds">'</span></span>;
+    s.src <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>/yourscript?some=parameter&amp;callback=jsonpCallback<span class="pl-pds">'</span></span>;
     <span class="pl-k">var</span> x <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">getElementsByTagName</span>(<span class="pl-s"><span class="pl-pds">'</span>script<span class="pl-pds">'</span></span>)[<span class="pl-c1">0</span>];
     x.<span class="pl-c1">parentNode</span>.<span class="pl-c1">insertBefore</span>(s, x);
   })();</pre></div>
+
+<p>Know more about jsonp</p>
+
+<ol>
+<li>JSONP only works in GET HTTP request.</li>
+<li>JSONP lacks error handling, means you cannot detect case in response status code 404, 500 and so on.</li>
+<li>JSONP requests are always asynchronous.</li>
+<li>Beware of CSRF attack.</li>
+<li>Cross domain communication. Script response side (server-side) don't need to care about CORS.</li>
+</ol>
 
 <h3>
 <a id="navigatorsendbeacon" class="anchor" href="#navigatorsendbeacon" aria-hidden="true"><span class="octicon octicon-link"></span></a>Navigator.sendBeacon()</h3>
@@ -819,7 +920,7 @@ Just include the JS script link.</p>
 <h3>
 <a id="parsing-uri" class="anchor" href="#parsing-uri" aria-hidden="true"><span class="octicon octicon-link"></span></a>Parsing URI</h3>
 
-<p>Here's a simplest by using the native URL() Interface but it doesn't support on all the browsers.</p>
+<p>Here's a simplest by using the native URL() Interface but it doesn't support on all the browsers also <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/URL">not standard yet</a>.</p>
 
 <div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> parser <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">URL</span>(<span class="pl-s"><span class="pl-pds">'</span>http://github.com/huei90<span class="pl-pds">'</span></span>);
 parser.<span class="pl-c1">hostname</span>; <span class="pl-c">// =&gt; "github.com"</span></pre></div>
@@ -862,6 +963,13 @@ parser.<span class="pl-c1">hostname</span>; <span class="pl-c">// =&gt; "github.
 <li><a href="https://itunes.apple.com/tw/app/cellist-http-debugging-proxy/id897814548?l=zh&amp;mt=12">Cellist</a></li>
 </ul>
 
+<h3>
+<a id="browsersync" class="anchor" href="#browsersync" aria-hidden="true"><span class="octicon octicon-link"></span></a>BrowserSync</h3>
+
+<p><a href="http://www.browsersync.io">BrowserSync</a> makes your tweaking and testing faster by synchronising file changes and interactions across multiple devices. It’s wicked-fast and totally free.</p>
+
+<p>It really helps alot if you need to test your SDK result in multiple cross devices. Try it =)</p>
+
 <h2>
 <a id="tips-and-tricks" class="anchor" href="#tips-and-tricks" aria-hidden="true"><span class="octicon octicon-link"></span></a>Tips and Tricks</h2>
 
@@ -872,13 +980,6 @@ parser.<span class="pl-c1">hostname</span>; <span class="pl-c">// =&gt; "github.
 we just need to do a simple 1x1 pixel request (for example: return a request when landing on thank you/last page). All we need to do is ask the developer to include an image file with our url link.</p>
 
 <div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">img</span> <span class="pl-e">height</span>=<span class="pl-s"><span class="pl-pds">"</span>1<span class="pl-pds">"</span></span> <span class="pl-e">width</span>=<span class="pl-s"><span class="pl-pds">"</span>1<span class="pl-pds">"</span></span> <span class="pl-e">alt</span>=<span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span> <span class="pl-e">style</span>=<span class="pl-s"><span class="pl-pds">"</span>display:none<span class="pl-pds">"</span></span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>https://yourUrlLink.com/t?timestamp=1234567890<span class="pl-ii">&amp;</span>type=page1<span class="pl-ii">&amp;</span>currency=USD<span class="pl-ii">&amp;</span>noscript=1<span class="pl-pds">"</span></span> /&gt;</pre></div>
-
-<h3>
-<a id="browsersync" class="anchor" href="#browsersync" aria-hidden="true"><span class="octicon octicon-link"></span></a>BrowserSync</h3>
-
-<p><a href="http://www.browsersync.io">BrowserSync</a> makes your tweaking and testing faster by synchronising file changes and interactions across multiple devices. It’s wicked-fast and totally free.</p>
-
-<p>It really helps alot if you need to test your SDK result in multiple cross devices. Try it =)</p>
 
 <h3>
 <a id="page-visibility-api" class="anchor" href="#page-visibility-api" aria-hidden="true"><span class="octicon octicon-link"></span></a>Page Visibility API</h3>
@@ -966,17 +1067,6 @@ These characters are: # $ &amp; + , / : ; = ? @ <a href="http://stackoverflow.co
 }</pre></div>
 
 <h3>
-<a id="disable-scroll" class="anchor" href="#disable-scroll" aria-hidden="true"><span class="octicon octicon-link"></span></a>Disable Scroll</h3>
-
-<p>In web page, use CSS style <code>overflow: hidden</code>, in some mobie web, this css doesn't work, use javascript event.</p>
-
-<div class="highlight highlight-source-js"><pre><span class="pl-c1">document</span>.addEventListener(<span class="pl-s"><span class="pl-pds">'</span>touchstart<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">e</span>){ e.preventDefault(); }); <span class="pl-c">// prevent scroll</span>
-<span class="pl-c">// or </span>
-<span class="pl-c1">document</span>.<span class="pl-c1">body</span>.addEventListener(<span class="pl-s"><span class="pl-pds">'</span>touchstart<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">e</span>){ e.preventDefault(); }); <span class="pl-c">// prevent scroll</span>
-<span class="pl-c">// use move if you need some touch event</span>
-<span class="pl-c1">document</span>.addEventListener(<span class="pl-s"><span class="pl-pds">'</span>touchmove<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">e</span>){ e.preventDefault(); }); <span class="pl-c">// prevent scroll</span></pre></div>
-
-<h3>
 <a id="once-function" class="anchor" href="#once-function" aria-hidden="true"><span class="octicon octicon-link"></span></a>Once Function</h3>
 
 <p>Here show how to implement the function <code>once</code></p>
@@ -1002,7 +1092,7 @@ These characters are: # $ &amp; + , / : ; = ? @ <a href="http://stackoverflow.co
 
 <span class="pl-c">// Usage</span>
 <span class="pl-k">var</span> canOnlyFireOnce <span class="pl-k">=</span> once(<span class="pl-k">function</span>() {
-    <span class="pl-en">console</span><span class="pl-c1">.log</span>(<span class="pl-s"><span class="pl-pds">'</span>Fired!<span class="pl-pds">'</span></span>);
+    <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">'</span>Fired!<span class="pl-pds">'</span></span>);
 });
 
 canOnlyFireOnce(); <span class="pl-c">// "Fired!"</span>
@@ -1015,6 +1105,58 @@ canOnlyFireOnce(); <span class="pl-c">// nada</span></pre></div>
 
 <p><a href="https://www.youtube.com/watch?v=u0rfDeaxehc">Device pixel ratio - Mobile Web Development</a> <br>
 <a href="https://www.youtube.com/watch?t=34&amp;v=UUF4jD-xoYc">Mobile device pixels - Mobile Web Development</a></p>
+
+<h3>
+<a id="get-style-value" class="anchor" href="#get-style-value" aria-hidden="true"><span class="octicon octicon-link"></span></a>Get Style Value</h3>
+
+<p><strong>Get inline-style value</strong></p>
+
+<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">span</span> <span class="pl-e">id</span>=<span class="pl-s"><span class="pl-pds">"</span>black<span class="pl-pds">"</span></span> <span class="pl-e">style</span>=<span class="pl-s"><span class="pl-pds">"</span>color: black<span class="pl-pds">"</span></span>&gt; This is black color span &lt;/<span class="pl-ent">span</span>&gt;
+<span class="pl-s1">&lt;<span class="pl-ent">script</span>&gt;</span>
+<span class="pl-s1">    <span class="pl-c1">document</span>.<span class="pl-c1">getElementById</span>(<span class="pl-s"><span class="pl-pds">'</span>black<span class="pl-pds">'</span></span>).<span class="pl-c1">style</span>.<span class="pl-c1">color</span>; <span class="pl-c">// =&gt; black</span></span>
+<span class="pl-s1">&lt;/<span class="pl-ent">script</span>&gt;</span></pre></div>
+
+<p><strong>Get Real style value</strong></p>
+
+<div class="highlight highlight-text-html-basic"><pre><span class="pl-s1">&lt;<span class="pl-ent">style</span>&gt;</span>
+<span class="pl-s1"><span class="pl-e">#black</span> {</span>
+<span class="pl-s1">    <span class="pl-c1"><span class="pl-c1">color</span></span>: <span class="pl-c1">red</span> <span class="pl-k">!important</span>;</span>
+<span class="pl-s1">}</span>
+<span class="pl-s1">&lt;/<span class="pl-ent">style</span>&gt;</span>
+
+&lt;<span class="pl-ent">span</span> <span class="pl-e">id</span>=<span class="pl-s"><span class="pl-pds">"</span>black<span class="pl-pds">"</span></span> <span class="pl-e">style</span>=<span class="pl-s"><span class="pl-pds">"</span>color: black<span class="pl-pds">"</span></span>&gt; This is black color span &lt;/<span class="pl-ent">span</span>&gt;
+
+<span class="pl-s1">&lt;<span class="pl-ent">script</span>&gt;</span>
+<span class="pl-s1">    <span class="pl-c1">document</span>.<span class="pl-c1">getElementById</span>(<span class="pl-s"><span class="pl-pds">'</span>black<span class="pl-pds">'</span></span>).<span class="pl-c1">style</span>.<span class="pl-c1">color</span>; <span class="pl-c">// =&gt; black</span></span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-c">// real</span></span>
+<span class="pl-s1">    <span class="pl-k">var</span> black <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">getElementById</span>(<span class="pl-s"><span class="pl-pds">'</span>black<span class="pl-pds">'</span></span>);</span>
+<span class="pl-s1">    <span class="pl-c1">window</span>.getComputedStyle(black, <span class="pl-c1">null</span>).getPropertyValue(<span class="pl-s"><span class="pl-pds">'</span>color<span class="pl-pds">'</span></span>); <span class="pl-c">// =&gt; rgb(255, 0, 0)</span></span>
+<span class="pl-s1">&lt;/<span class="pl-ent">script</span>&gt;</span></pre></div>
+
+<p>ref: <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/getComputedStyle">https://developer.mozilla.org/en-US/docs/Web/API/Window/getComputedStyle</a></p>
+
+<h3>
+<a id="check-if-element-in-viewport" class="anchor" href="#check-if-element-in-viewport" aria-hidden="true"><span class="octicon octicon-link"></span></a>Check if Element in Viewport</h3>
+
+<p>You can find out more <a href="http://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport/7557433#7557433">here</a>.</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">function</span> <span class="pl-en">isElementInViewport</span> (<span class="pl-smi">el</span>) {
+
+    <span class="pl-c">//special bonus for those using jQuery</span>
+    <span class="pl-k">if</span> (<span class="pl-k">typeof</span> jQuery <span class="pl-k">===</span> <span class="pl-s"><span class="pl-pds">"</span>function<span class="pl-pds">"</span></span> <span class="pl-k">&amp;&amp;</span> el <span class="pl-k">instanceof</span> jQuery) {
+        el <span class="pl-k">=</span> el[<span class="pl-c1">0</span>];
+    }
+
+    <span class="pl-k">var</span> rect <span class="pl-k">=</span> el.getBoundingClientRect();
+
+    <span class="pl-k">return</span> (
+        rect.<span class="pl-c1">top</span> <span class="pl-k">&gt;=</span> <span class="pl-c1">0</span> <span class="pl-k">&amp;&amp;</span>
+        rect.<span class="pl-c1">left</span> <span class="pl-k">&gt;=</span> <span class="pl-c1">0</span> <span class="pl-k">&amp;&amp;</span>
+        rect.<span class="pl-c1">bottom</span> <span class="pl-k">&lt;=</span> (<span class="pl-c1">window</span>.<span class="pl-c1">innerHeight</span> <span class="pl-k">||</span> <span class="pl-c1">document</span>.<span class="pl-c1">documentElement</span>.clientHeight) <span class="pl-k">&amp;&amp;</span> <span class="pl-c">/*or $(window).height() */</span>
+        rect.<span class="pl-c1">right</span> <span class="pl-k">&lt;=</span> (<span class="pl-c1">window</span>.<span class="pl-c1">innerWidth</span> <span class="pl-k">||</span> <span class="pl-c1">document</span>.<span class="pl-c1">documentElement</span>.clientWidth) <span class="pl-c">/*or $(window).width() */</span>
+    );
+}</pre></div>
 
 <h2>
 <a id="template" class="anchor" href="#template" aria-hidden="true"><span class="octicon octicon-link"></span></a>Template</h2>
@@ -1054,7 +1196,8 @@ canOnlyFireOnce(); <span class="pl-c">// nada</span></pre></div>
 <li><a href="http://stackoverflow.com/questions/2414750/difference-between-domcontentloaded-and-load-events">DOMContentLoaded and Load Event</a></li>
 </ol>
 
-<p><em>(inspired by <a href="https://github.com/interagent/http-api-design">http-api-design</a>)</em></p>
+<p><em>(inspired by <a href="https://github.com/interagent/http-api-design">http-api-design</a>)</em>
+d</p>
 
       <footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/huei90/javascript-sdk-design">Javascript-sdk-design</a> is maintained by <a href="https://github.com/huei90">huei90</a>.</span>
