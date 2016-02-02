@@ -20,10 +20,10 @@
 
     <section class="main-content">
       <h1>
-<a id="javascript-sdk-design-guide" class="anchor" href="#javascript-sdk-design-guide" aria-hidden="true"><span class="octicon octicon-link"></span></a>JavaScript SDK Design Guide</h1>
+<a id="javascript-sdk-design-guide" class="anchor" href="#javascript-sdk-design-guide" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>JavaScript SDK Design Guide</h1>
 
 <h2>
-<a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction</h2>
+<a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Introduction</h2>
 
 <p>This guide gives you an introduction to developing a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript">JavaScript</a> SDK on desktop and mobile web in different platforms and browsers (&lt;99.99% I might skip some browsers), for those developed for non-browser supports (hardware, embedded, node/io js) are excluded in this document and will be considered in the future.</p>
 
@@ -32,16 +32,26 @@ I'm here to gather and note down the knowledge of my personal experiences. This 
 
 <p>Feel free to <a href="https://github.com/huei90/JavaScript-sdk-design/edit/master/README.md">edit</a> or you can drop me suggestions on the <a href="https://github.com/huei90/JavaScript-sdk-design/issues">issue list</a>.</p>
 
-<hr>
-
-<p align="center">
-<a href="http://ctt.ec/GyjRN" title="Click to Tweet">Click to Tweet</a>
+<p align="right">
+<i>READ IT</i> 
+<a href="http://sdk-design.js.org" target="_blank">ONLINE</a> /
+<a href="https://gitprint.com/huei90/javascript-sdk-design/blob/master/README.md" target="_blank">PDF</a>
+<i>OR</i> 
+<a href="http://ctt.ec/GyjRN" title="Click to Tweet">Tweet It</a> <br>
 </p>
+
+
+
+
+
+
+
+
 
 <hr>
 
 <h2>
-<a id="content" class="anchor" href="#content" aria-hidden="true"><span class="octicon octicon-link"></span></a>Content</h2>
+<a id="content" class="anchor" href="#content" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Content</h2>
 
 <ul>
 <li><a href="#what-is-sdk">What is SDK</a></li>
@@ -150,6 +160,15 @@ I'm here to gather and note down the knowledge of my personal experiences. This 
 <li><a href="#pixel-ratio-density">Pixel Ratio Density</a></li>
 <li><a href="#get-style-value">Get Style Value</a></li>
 <li><a href="#check-if-element-in-viewport">Check if Element in Viewport</a></li>
+<li><a href="#check-if-element-is-visible">Check if Element is Visible</a></li>
+<li><a href="#get-viewport-size">Get Viewport Size</a></li>
+</ul>
+</li>
+<li>
+<a href="#wtf">WTF</a>
+
+<ul>
+<li><a href="#misspelling-of-referrer">Misspelling Of Referrer</a></li>
 </ul>
 </li>
 <li><a href="#template">Template</a></li>
@@ -158,14 +177,14 @@ I'm here to gather and note down the knowledge of my personal experiences. This 
 </ul>
 
 <h2>
-<a id="what-is-sdk" class="anchor" href="#what-is-sdk" aria-hidden="true"><span class="octicon octicon-link"></span></a>What is SDK</h2>
+<a id="what-is-sdk" class="anchor" href="#what-is-sdk" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>What is SDK</h2>
 
 <p>I know it's very common, but it is.</p>
 
 <p>"Short for <strong>software development kit</strong>, a programming package that enables a programmer to develop applications for a specific platform. Typically an SDK includes one or more APIs, programming tools, and documentation."</p>
 
 <h2>
-<a id="design-philosophy" class="anchor" href="#design-philosophy" aria-hidden="true"><span class="octicon octicon-link"></span></a>Design Philosophy</h2>
+<a id="design-philosophy" class="anchor" href="#design-philosophy" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Design Philosophy</h2>
 
 <p>It depends on your purpose of your SDK service and usage,
 but there must be <strong>native</strong>, <strong>short</strong>, <strong>fast</strong>, <strong>clean</strong>, <strong>readable</strong> and <strong>testable</strong>.</p>
@@ -182,7 +201,7 @@ Or if you need the HTTP <a href="https://github.com/huei90/JavaScript-sdk-design
 Hence, remember to write your <strong>Documentation</strong> for your SDK, comment in your code, unit test and user scenario test.</p>
 
 <h2>
-<a id="scope" class="anchor" href="#scope" aria-hidden="true"><span class="octicon octicon-link"></span></a>Scope</h2>
+<a id="scope" class="anchor" href="#scope" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Scope</h2>
 
 <p><em>Based on the book <a href="http://thirdpartyjs.com">Third-Party JavaScript</a></em></p>
 
@@ -200,13 +219,13 @@ Hence, remember to write your <strong>Documentation</strong> for your SDK, comme
 <p>In what case we should use SDK in JavaScript environment? <a href="https://github.com/huei90/JavaScript-sdk-design/edit/master/README.md">Suggest one</a>.</p>
 
 <h2>
-<a id="include-the-sdk" class="anchor" href="#include-the-sdk" aria-hidden="true"><span class="octicon octicon-link"></span></a>Include the SDK</h2>
+<a id="include-the-sdk" class="anchor" href="#include-the-sdk" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Include the SDK</h2>
 
 <p>You are suggested to use <strong>Asynchronous Syntax</strong> for your script loaded.
 We want to optimize the user experience on the website as we don't want our SDK library to interfere the main web loaded.</p>
 
 <h3>
-<a id="asynchronous-syntax" class="anchor" href="#asynchronous-syntax" aria-hidden="true"><span class="octicon octicon-link"></span></a>Asynchronous Syntax</h3>
+<a id="asynchronous-syntax" class="anchor" href="#asynchronous-syntax" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Asynchronous Syntax</h3>
 
 <div class="highlight highlight-text-html-basic"><pre><span class="pl-s1">&lt;<span class="pl-ent">script</span>&gt;</span>
 <span class="pl-s1">  (<span class="pl-k">function</span> () {</span>
@@ -224,12 +243,12 @@ We want to optimize the user experience on the website as we don't want our SDK 
 <div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">script</span> <span class="pl-e">async</span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>http://xxx.com/sdk.js<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">script</span>&gt;</pre></div>
 
 <h3>
-<a id="traditional-syntax" class="anchor" href="#traditional-syntax" aria-hidden="true"><span class="octicon octicon-link"></span></a>Traditional Syntax</h3>
+<a id="traditional-syntax" class="anchor" href="#traditional-syntax" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Traditional Syntax</h3>
 
 <div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">script</span> <span class="pl-e">type</span>=<span class="pl-s"><span class="pl-pds">"</span>text/javascript<span class="pl-pds">"</span></span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>http://xxx.com/sdk.js<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">script</span>&gt;</pre></div>
 
 <h3>
-<a id="comparison" class="anchor" href="#comparison" aria-hidden="true"><span class="octicon octicon-link"></span></a>Comparison</h3>
+<a id="comparison" class="anchor" href="#comparison" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Comparison</h3>
 
 <p>Here's the simple graph to show the differentiate between Asynchronous and Traditional Syntax.</p>
 
@@ -249,8 +268,13 @@ We want to optimize the user experience on the website as we don't want our SDK 
 
 <p><img src="http://peter.sh/wp-content/uploads/2010/09/execution2.jpg"></p>
 
+<blockquote>
+<p><em><a href="https://developers.google.com/speed/docs/insights/BlockingJS">https://developers.google.com/speed/docs/insights/BlockingJS</a></em> <br>
+You should avoid and minimize the use of blocking JavaScript, especially external scripts that must be fetched before they can be executed. Scripts that are necessary to render page content can be inlined to avoid extra network requests, however the inlined content needs to be small and must execute quickly to deliver good performance. Scripts that are not critical to initial render should be made asynchronous or deferred until after the first render.</p>
+</blockquote>
+
 <h3>
-<a id="problem-of-asynchronous" class="anchor" href="#problem-of-asynchronous" aria-hidden="true"><span class="octicon octicon-link"></span></a>Problem of Asynchronous</h3>
+<a id="problem-of-asynchronous" class="anchor" href="#problem-of-asynchronous" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Problem of Asynchronous</h3>
 
 <p>When you are using Asynchronous,
 you cannot execute your SDK function which script written within the page.</p>
@@ -311,7 +335,7 @@ your SDK should handle and execute <code>SDKName.q</code> and reinitial the name
 <span class="pl-k">&lt;</span><span class="pl-k">/</span>script<span class="pl-k">&gt;</span></pre></div>
 
 <h3>
-<a id="others" class="anchor" href="#others" aria-hidden="true"><span class="octicon octicon-link"></span></a>Others</h3>
+<a id="others" class="anchor" href="#others" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Others</h3>
 
 <p>There are other different ways to include a script</p>
 
@@ -356,7 +380,7 @@ your SDK should handle and execute <code>SDKName.q</code> and reinitial the name
 })();</pre></div>
 
 <h2>
-<a id="sdk-versioning" class="anchor" href="#sdk-versioning" aria-hidden="true"><span class="octicon octicon-link"></span></a>SDK Versioning</h2>
+<a id="sdk-versioning" class="anchor" href="#sdk-versioning" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>SDK Versioning</h2>
 
 <p>Please avoid using your special case for version like <code>brand-v&lt;timestamp&gt;.js</code> <code>brand-v&lt;datetime&gt;.js</code> <code>brand-v1-v2.js</code>,
 it may cause the developer who use the SDK on confusing which is the latest version.</p>
@@ -391,7 +415,7 @@ http://xxx.com/sdk-experimental.js
 </code></pre>
 
 <h2>
-<a id="changelog-document" class="anchor" href="#changelog-document" aria-hidden="true"><span class="octicon octicon-link"></span></a>Changelog Document</h2>
+<a id="changelog-document" class="anchor" href="#changelog-document" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Changelog Document</h2>
 
 <p>You should notice that your SDK user will not know if you upgrade your SDK without announcement.
 Remember to write a changelog to document your major, minor and even bug fix change.
@@ -408,7 +432,7 @@ It will be a good developer experience if we can trace the changing API for the 
 </code></pre>
 
 <h2>
-<a id="namespace" class="anchor" href="#namespace" aria-hidden="true"><span class="octicon octicon-link"></span></a>Namespace</h2>
+<a id="namespace" class="anchor" href="#namespace" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Namespace</h2>
 
 <p>You should not define more than one global namespace in your SDK and
 prevent using the common word for your namespace to avoid collision with other libraries.</p>
@@ -431,10 +455,10 @@ m<span class="pl-k">=</span><span class="pl-smi">s</span>.<span class="pl-c1">ge
 <div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">script</span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>http://your_domain/sdk?namespace=yourcompany<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">script</span>&gt;</pre></div>
 
 <h2>
-<a id="storage-mechanism" class="anchor" href="#storage-mechanism" aria-hidden="true"><span class="octicon octicon-link"></span></a>Storage Mechanism</h2>
+<a id="storage-mechanism" class="anchor" href="#storage-mechanism" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Storage Mechanism</h2>
 
 <h3>
-<a id="cookie" class="anchor" href="#cookie" aria-hidden="true"><span class="octicon octicon-link"></span></a>Cookie</h3>
+<a id="cookie" class="anchor" href="#cookie" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Cookie</h3>
 
 <p>The domain scope of using cookie is quite complex while involving the <code>subdomain</code> and <code>path</code>.</p>
 
@@ -500,7 +524,7 @@ and cookie <code>third=value3</code> in domain <code>http://sub.github.com</code
 </table>
 
 <h4>
-<a id="check-cookie-writable" class="anchor" href="#check-cookie-writable" aria-hidden="true"><span class="octicon octicon-link"></span></a>Check Cookie Writable</h4>
+<a id="check-cookie-writable" class="anchor" href="#check-cookie-writable" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Check Cookie Writable</h4>
 
 <p>Given a domain (Default as current hostname), check whether the cookie is writable.</p>
 
@@ -518,12 +542,12 @@ and cookie <code>third=value3</code> in domain <code>http://sub.github.com</code
 };</pre></div>
 
 <h4>
-<a id="check-third-party-cookie-writable" class="anchor" href="#check-third-party-cookie-writable" aria-hidden="true"><span class="octicon octicon-link"></span></a>Check Third Party Cookie Writable</h4>
+<a id="check-third-party-cookie-writable" class="anchor" href="#check-third-party-cookie-writable" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Check Third Party Cookie Writable</h4>
 
 <p>It's impossible to check only using client side JavaScript, you need a server to do that. (<a href="https://dl.dropboxusercontent.com/u/105727/web/3rd/third-party-cookies.html">Example</a>)</p>
 
 <h4>
-<a id="write-read-remove-cookie-code" class="anchor" href="#write-read-remove-cookie-code" aria-hidden="true"><span class="octicon octicon-link"></span></a>Write Read Remove Cookie Code</h4>
+<a id="write-read-remove-cookie-code" class="anchor" href="#write-read-remove-cookie-code" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Write Read Remove Cookie Code</h4>
 
 <p>Snippet Code for write/read/remove cookie script.</p>
 
@@ -556,15 +580,15 @@ and cookie <code>third=value3</code> in domain <code>http://sub.github.com</code
 };</pre></div>
 
 <h3>
-<a id="session" class="anchor" href="#session" aria-hidden="true"><span class="octicon octicon-link"></span></a>Session</h3>
+<a id="session" class="anchor" href="#session" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Session</h3>
 
-<p>It's important to know that JavaScript is not possible to write Session,
+<p>It's important to know that JavaScript is <strong>not possible</strong> to write Session,
 please refer to the server side team to implement Session.</p>
 
 <p>A page session lasts for as long as the browser is open and survives over page reloads and restores. Opening a page in a new tab or window will cause a new session to be initiated.</p>
 
 <h3>
-<a id="localstorage" class="anchor" href="#localstorage" aria-hidden="true"><span class="octicon octicon-link"></span></a>LocalStorage</h3>
+<a id="localstorage" class="anchor" href="#localstorage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>LocalStorage</h3>
 
 <p>Stores data with no expiration date, storage limit is far larger (at least 5MB) and
 information is never transferred to the server.</p>
@@ -573,7 +597,7 @@ information is never transferred to the server.</p>
 You can create an iframe inside the website and use <code>postMessage</code> to pass the value to others. <a href="http://stackoverflow.com/questions/10502469/is-there-any-workaround-to-make-use-of-html5-localstorage-on-both-http-and-https">HOW TO?</a></p>
 
 <h4>
-<a id="check-localstorage-writable" class="anchor" href="#check-localstorage-writable" aria-hidden="true"><span class="octicon octicon-link"></span></a>Check LocalStorage Writable</h4>
+<a id="check-localstorage-writable" class="anchor" href="#check-localstorage-writable" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Check LocalStorage Writable</h4>
 
 <p>window.localStorage is not support in every browser, SDK should check available before using it.</p>
 
@@ -589,12 +613,12 @@ You can create an iframe inside the website and use <code>postMessage</code> to 
 };</pre></div>
 
 <h3>
-<a id="session-storage" class="anchor" href="#session-storage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Session Storage</h3>
+<a id="session-storage" class="anchor" href="#session-storage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Session Storage</h3>
 
 <p>Stores data for one session (data is lost when the tab is closed).</p>
 
 <h3>
-<a id="check-sessionstorage-writable" class="anchor" href="#check-sessionstorage-writable" aria-hidden="true"><span class="octicon octicon-link"></span></a>Check SessionStorage Writable</h3>
+<a id="check-sessionstorage-writable" class="anchor" href="#check-sessionstorage-writable" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Check SessionStorage Writable</h3>
 
 <div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> <span class="pl-en">checkCanSessionStorage</span> <span class="pl-k">=</span> <span class="pl-k">function</span>() {
   <span class="pl-k">var</span> mod <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>modernizr<span class="pl-pds">'</span></span>;
@@ -608,12 +632,12 @@ You can create an iframe inside the website and use <code>postMessage</code> to 
 }</pre></div>
 
 <h2>
-<a id="event" class="anchor" href="#event" aria-hidden="true"><span class="octicon octicon-link"></span></a>Event</h2>
+<a id="event" class="anchor" href="#event" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Event</h2>
 
 <p>In client browser, there are events <code>load</code> <code>unload</code> <code>on</code> <code>off</code> <code>bind</code> .... Here's some <a href="https://remysharp.com/2010/10/08/what-is-a-polyfill">polyfills</a> for you to handle all different platforms.</p>
 
 <h3>
-<a id="document-ready" class="anchor" href="#document-ready" aria-hidden="true"><span class="octicon octicon-link"></span></a>Document Ready</h3>
+<a id="document-ready" class="anchor" href="#document-ready" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Document Ready</h3>
 
 <p>Please do make sure that the entire page is finished loading(ready) before starting execution the SDK functions.</p>
 
@@ -639,7 +663,7 @@ You can create an iframe inside the website and use <code>postMessage</code> to 
 </blockquote>
 
 <h3>
-<a id="message-event" class="anchor" href="#message-event" aria-hidden="true"><span class="octicon octicon-link"></span></a>Message Event</h3>
+<a id="message-event" class="anchor" href="#message-event" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Message Event</h3>
 
 <p>It's about the cross-origin communication between iframe and window, read the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage">API documentation</a>.</p>
 
@@ -663,7 +687,7 @@ You can create an iframe inside the website and use <code>postMessage</code> to 
 <p>The post message data should be <strong>String</strong>, for more advanced used in json, use <strong>JSON String</strong>. Although the modern browser do support <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm">Structured Clone Algorithm</a> on the parameter, but not the 100% browser.</p>
 
 <h3>
-<a id="orientation-change" class="anchor" href="#orientation-change" aria-hidden="true"><span class="octicon octicon-link"></span></a>Orientation Change</h3>
+<a id="orientation-change" class="anchor" href="#orientation-change" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Orientation Change</h3>
 
 <p>Detect device orientation change</p>
 
@@ -679,7 +703,7 @@ You can create an iframe inside the website and use <code>postMessage</code> to 
 <span class="pl-k">var</span> orientation <span class="pl-k">=</span> <span class="pl-smi">screen</span>.<span class="pl-smi">orientation</span> <span class="pl-k">||</span> <span class="pl-smi">screen</span>.<span class="pl-smi">mozOrientation</span> <span class="pl-k">||</span> <span class="pl-smi">screen</span>.<span class="pl-smi">msOrientation</span>;</pre></div>
 
 <h3>
-<a id="disable-scroll" class="anchor" href="#disable-scroll" aria-hidden="true"><span class="octicon octicon-link"></span></a>Disable Scroll</h3>
+<a id="disable-scroll" class="anchor" href="#disable-scroll" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Disable Scroll</h3>
 
 <p>In web page, use CSS style <code>overflow: hidden</code>, in some mobile web, this css doesn't work, use javascript event.</p>
 
@@ -690,14 +714,14 @@ You can create an iframe inside the website and use <code>postMessage</code> to 
 <span class="pl-smi">document</span>.<span class="pl-en">addEventListener</span>(<span class="pl-s"><span class="pl-pds">'</span>touchmove<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">e</span>){ <span class="pl-smi">e</span>.<span class="pl-en">preventDefault</span>(); }); <span class="pl-c">// prevent scroll</span></pre></div>
 
 <h2>
-<a id="request" class="anchor" href="#request" aria-hidden="true"><span class="octicon octicon-link"></span></a>Request</h2>
+<a id="request" class="anchor" href="#request" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Request</h2>
 
 <p>The communication between our SDK and Server is using Ajax Request,
 as we know we can use jQuery ajax http request to communicate with Server,
 but there's a better solution to implement it.</p>
 
 <h3>
-<a id="image-beacon" class="anchor" href="#image-beacon" aria-hidden="true"><span class="octicon octicon-link"></span></a>Image Beacon</h3>
+<a id="image-beacon" class="anchor" href="#image-beacon" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Image Beacon</h3>
 
 <p>Use the Image Beacon to ask the browser to perform a method GET Request to get an Image.</p>
 
@@ -723,7 +747,7 @@ but there's a better solution to implement it.</p>
 <span class="pl-smi">img</span>.<span class="pl-smi">onerror</span> <span class="pl-k">=</span> errorCallback;</pre></div>
 
 <h3>
-<a id="single-post" class="anchor" href="#single-post" aria-hidden="true"><span class="octicon octicon-link"></span></a>Single Post</h3>
+<a id="single-post" class="anchor" href="#single-post" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Single Post</h3>
 
 <p>Use the native form element method POST to send a key value.</p>
 
@@ -743,7 +767,7 @@ but there's a better solution to implement it.</p>
 <span class="pl-smi">form</span>.<span class="pl-c1">submit</span>();</pre></div>
 
 <h3>
-<a id="multiple-post" class="anchor" href="#multiple-post" aria-hidden="true"><span class="octicon octicon-link"></span></a>Multiple Post</h3>
+<a id="multiple-post" class="anchor" href="#multiple-post" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Multiple Post</h3>
 
 <p>The Service is often complex, we need to send more data through method POST.</p>
 
@@ -792,7 +816,7 @@ but there's a better solution to implement it.</p>
 <div class="highlight highlight-source-js"><pre><span class="pl-en">requestWithoutAjax</span>(<span class="pl-s"><span class="pl-pds">'</span>url/to<span class="pl-pds">'</span></span>, { id<span class="pl-k">:</span> <span class="pl-c1">2</span>, price<span class="pl-k">:</span> <span class="pl-c1">2.5</span>, lastname<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Gamez<span class="pl-pds">'</span></span>});</pre></div>
 
 <h3>
-<a id="iframe" class="anchor" href="#iframe" aria-hidden="true"><span class="octicon octicon-link"></span></a>Iframe</h3>
+<a id="iframe" class="anchor" href="#iframe" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Iframe</h3>
 
 <p>When you need to generate a content within the page, you can use iframe to embed your html.</p>
 
@@ -844,7 +868,7 @@ but there's a better solution to implement it.</p>
 <span class="pl-s1">&lt;/<span class="pl-ent">script</span>&gt;</span></pre></div>
 
 <h3>
-<a id="script-jsonp" class="anchor" href="#script-jsonp" aria-hidden="true"><span class="octicon octicon-link"></span></a>Script jsonp</h3>
+<a id="script-jsonp" class="anchor" href="#script-jsonp" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Script jsonp</h3>
 
 <p>This is the case that your server needs to response JavaScript code and let the client browser execute it.
 Just include the JS script link.</p>
@@ -869,7 +893,7 @@ Just include the JS script link.</p>
 </ol>
 
 <h3>
-<a id="navigatorsendbeacon" class="anchor" href="#navigatorsendbeacon" aria-hidden="true"><span class="octicon octicon-link"></span></a>Navigator.sendBeacon()</h3>
+<a id="navigatorsendbeacon" class="anchor" href="#navigatorsendbeacon" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Navigator.sendBeacon()</h3>
 
 <p>Look at the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Navigator/sendBeacon">documentation</a>.</p>
 
@@ -882,7 +906,7 @@ Just include the JS script link.</p>
 <div class="highlight highlight-source-js"><pre><span class="pl-smi">navigator</span>.<span class="pl-en">sendBeacon</span>(<span class="pl-s"><span class="pl-pds">"</span>/log<span class="pl-pds">"</span></span>, analyticsData);</pre></div>
 
 <h3>
-<a id="xmlhttprequest" class="anchor" href="#xmlhttprequest" aria-hidden="true"><span class="octicon octicon-link"></span></a>XMLHttpRequest</h3>
+<a id="xmlhttprequest" class="anchor" href="#xmlhttprequest" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>XMLHttpRequest</h3>
 
 <p>Writing XMLHttpRequest is not a good idea. I assume that you don't want to waste time on battling with IE or other browsers. Here's some polyfills or code you can try</p>
 
@@ -897,7 +921,7 @@ Just include the JS script link.</p>
 </ol>
 
 <h3>
-<a id="fragment-identifier" class="anchor" href="#fragment-identifier" aria-hidden="true"><span class="octicon octicon-link"></span></a>Fragment Identifier</h3>
+<a id="fragment-identifier" class="anchor" href="#fragment-identifier" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Fragment Identifier</h3>
 
 <p>Also known as hash mark <code>#</code>. Remember that request with hash mark at the end is not pass within http request.</p>
 
@@ -913,17 +937,17 @@ Just include the JS script link.</p>
 (<span class="pl-k">new</span> <span class="pl-en">Image</span>()).<span class="pl-smi">src</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://yourrequest.com?url=<span class="pl-pds">'</span></span> <span class="pl-k">+</span> <span class="pl-en">encodeURIComponent</span>(<span class="pl-s"><span class="pl-pds">'</span>http://github.com/awesome#huei90<span class="pl-pds">'</span></span>);</pre></div>
 
 <h3>
-<a id="maximum-number-of-connection" class="anchor" href="#maximum-number-of-connection" aria-hidden="true"><span class="octicon octicon-link"></span></a>Maximum Number of Connection</h3>
+<a id="maximum-number-of-connection" class="anchor" href="#maximum-number-of-connection" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Maximum Number of Connection</h3>
 
 <p>Check the maximum number of browser's request connection. <a href="http://www.browserscope.org/?category=network&amp;v=top">browserscope</a></p>
 
 <h2 align="center">
-<a id="-" class="anchor" href="#-" aria-hidden="true"><span class="octicon octicon-link"></span></a>
+<a id="-" class="anchor" href="#-" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>
  <img src="https://cloud.githubusercontent.com/assets/2560096/9082891/ac4dc26e-3b99-11e5-8178-606270a801c4.png" alt="max number of connection">
 </h2>
 
 <h2>
-<a id="component-of-uri" class="anchor" href="#component-of-uri" aria-hidden="true"><span class="octicon octicon-link"></span></a>Component of URI</h2>
+<a id="component-of-uri" class="anchor" href="#component-of-uri" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Component of URI</h2>
 
 <p>It's important to know if your SDK needs to parse the location url.</p>
 
@@ -946,7 +970,7 @@ Just include the JS script link.</p>
 </code></pre>
 
 <h3>
-<a id="parsing-uri" class="anchor" href="#parsing-uri" aria-hidden="true"><span class="octicon octicon-link"></span></a>Parsing URI</h3>
+<a id="parsing-uri" class="anchor" href="#parsing-uri" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Parsing URI</h3>
 
 <p>Here's a simplest by using the native URL() Interface but it doesn't support all the browsers also <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/URL">not standard yet</a>.</p>
 
@@ -960,10 +984,10 @@ Just include the JS script link.</p>
 <span class="pl-smi">parser</span>.<span class="pl-c1">hostname</span>; <span class="pl-c">// =&gt; "github.com"</span></pre></div>
 
 <h2>
-<a id="debugging" class="anchor" href="#debugging" aria-hidden="true"><span class="octicon octicon-link"></span></a>Debugging</h2>
+<a id="debugging" class="anchor" href="#debugging" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Debugging</h2>
 
 <h3>
-<a id="simulating-multiple-domains" class="anchor" href="#simulating-multiple-domains" aria-hidden="true"><span class="octicon octicon-link"></span></a>Simulating Multiple Domains</h3>
+<a id="simulating-multiple-domains" class="anchor" href="#simulating-multiple-domains" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Simulating Multiple Domains</h3>
 
 <p>You don't need to register different domain names to simulate multiple domain, you can just edit your operating system's hosts file.</p>
 
@@ -978,7 +1002,7 @@ Just include the JS script link.</p>
 <p>Then you can access the page <code>http://publisher.net</code> and <code>http://sdk.net</code></p>
 
 <h3>
-<a id="developer-tools" class="anchor" href="#developer-tools" aria-hidden="true"><span class="octicon octicon-link"></span></a>Developer Tools</h3>
+<a id="developer-tools" class="anchor" href="#developer-tools" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Developer Tools</h3>
 
 <p>Use the web debugging tools from browser vendors when debugging your SDK JavaScript code - <code>Chrome Developer Tools</code> <code>Safari Developer Tools</code> <code>Firebug</code>. Developer tools also short for DevTools.</p>
 
@@ -987,14 +1011,14 @@ Just include the JS script link.</p>
 </blockquote>
 
 <h3>
-<a id="console-logs" class="anchor" href="#console-logs" aria-hidden="true"><span class="octicon octicon-link"></span></a>Console Logs</h3>
+<a id="console-logs" class="anchor" href="#console-logs" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Console Logs</h3>
 
 <p>For testing expected output text and other general debugging, <code>Console Logs</code> can be used throught the browser API <code>console.log()</code>. There are various typeways to format and output your messages, find out more <a href="https://developer.mozilla.org/en/docs/Web/API/console">Console API</a>.</p>
 
 <p><img src="https://cloud.githubusercontent.com/assets/2560096/8155377/411fb24a-1376-11e5-98da-f71f8ed29bcd.png" alt="screen shot 2015-06-15 at 3 50 23 pm"></p>
 
 <h3>
-<a id="debugging-proxy" class="anchor" href="#debugging-proxy" aria-hidden="true"><span class="octicon octicon-link"></span></a>Debugging Proxy</h3>
+<a id="debugging-proxy" class="anchor" href="#debugging-proxy" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Debugging Proxy</h3>
 
 <p>Sometimes debugging proxy will give you a hand on testing your SDK. Debug traffic, modify cookies, headers, cache, edit http request/response, SSL Proxying, ajax debugging and more.</p>
 
@@ -1007,17 +1031,17 @@ Just include the JS script link.</p>
 </ul>
 
 <h3>
-<a id="browsersync" class="anchor" href="#browsersync" aria-hidden="true"><span class="octicon octicon-link"></span></a>BrowserSync</h3>
+<a id="browsersync" class="anchor" href="#browsersync" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>BrowserSync</h3>
 
 <p><a href="http://www.browsersync.io">BrowserSync</a> makes your tweaking and testing faster by synchronising file changes and interactions across multiple devices. It’s wicked-fast and totally free.</p>
 
 <p>It really helps a lot if you need to test your SDK result in multiple cross devices. Try it =)</p>
 
 <h2>
-<a id="tips-and-tricks" class="anchor" href="#tips-and-tricks" aria-hidden="true"><span class="octicon octicon-link"></span></a>Tips and Tricks</h2>
+<a id="tips-and-tricks" class="anchor" href="#tips-and-tricks" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Tips and Tricks</h2>
 
 <h3>
-<a id="piggyback" class="anchor" href="#piggyback" aria-hidden="true"><span class="octicon octicon-link"></span></a>Piggyback</h3>
+<a id="piggyback" class="anchor" href="#piggyback" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Piggyback</h3>
 
 <p>Sometimes, we don't want our developers include all the SDK source,
 we just need to do a simple 1x1 pixel request (for example: return a request when landing on thank you/last page). All we need to do is ask the developer to include an image file with our url link.</p>
@@ -1025,17 +1049,17 @@ we just need to do a simple 1x1 pixel request (for example: return a request whe
 <div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">img</span> <span class="pl-e">height</span>=<span class="pl-s"><span class="pl-pds">"</span>1<span class="pl-pds">"</span></span> <span class="pl-e">width</span>=<span class="pl-s"><span class="pl-pds">"</span>1<span class="pl-pds">"</span></span> <span class="pl-e">alt</span>=<span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span> <span class="pl-e">style</span>=<span class="pl-s"><span class="pl-pds">"</span>display:none<span class="pl-pds">"</span></span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>https://yourUrlLink.com/t?timestamp=1234567890<span class="pl-ii">&amp;</span>type=page1<span class="pl-ii">&amp;</span>currency=USD<span class="pl-ii">&amp;</span>noscript=1<span class="pl-pds">"</span></span> /&gt;</pre></div>
 
 <h3>
-<a id="page-visibility-api" class="anchor" href="#page-visibility-api" aria-hidden="true"><span class="octicon octicon-link"></span></a>Page Visibility API</h3>
+<a id="page-visibility-api" class="anchor" href="#page-visibility-api" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Page Visibility API</h3>
 
 <p>Sometimes, your SDK wants to detect the user is whether focus your page. Try the polyfills  <a href="https://github.com/addyosmani/visibly.js">visibly.js</a> and <a href="https://github.com/ai/visibilityjs">visibilityjs</a>.</p>
 
 <h3>
-<a id="document-referrer" class="anchor" href="#document-referrer" aria-hidden="true"><span class="octicon octicon-link"></span></a>Document Referrer</h3>
+<a id="document-referrer" class="anchor" href="#document-referrer" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Document Referrer</h3>
 
 <p>Use <code>document.referrer</code> to get the url of current previous page. But remember that this referrer is "Browser Referrer" not the "Human Known Referrer". If you click the <strong>browser back button</strong>, for example pageA -&gt; pageB -&gt; pageC -&gt; (back button) pageB, current pageB's referrer is pageA, not pageC.</p>
 
 <h3>
-<a id="console-logs-polyfill" class="anchor" href="#console-logs-polyfill" aria-hidden="true"><span class="octicon octicon-link"></span></a>Console Logs Polyfill</h3>
+<a id="console-logs-polyfill" class="anchor" href="#console-logs-polyfill" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Console Logs Polyfill</h3>
 
 <p>It's not a real polyfill, just make sure that calling <code>console.log</code> API doesn't throw error event to client side.</p>
 
@@ -1050,7 +1074,7 @@ we just need to do a simple 1x1 pixel request (for example: return a request whe
 }</pre></div>
 
 <h3>
-<a id="encodeuri-or-encodeuricomponent" class="anchor" href="#encodeuri-or-encodeuricomponent" aria-hidden="true"><span class="octicon octicon-link"></span></a>EncodeURI or EncodeURIComponent</h3>
+<a id="encodeuri-or-encodeuricomponent" class="anchor" href="#encodeuri-or-encodeuricomponent" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>EncodeURI or EncodeURIComponent</h3>
 
 <p>Understand the difference between <code>escape()</code> <code>encodeURI()</code> <code>encodeURIComponent()</code> <a href="http://stackoverflow.com/a/3608791/1748884">here</a>.</p>
 
@@ -1058,17 +1082,17 @@ we just need to do a simple 1x1 pixel request (for example: return a request whe
 These characters are: # $ &amp; + , / : ; = ? @ <a href="http://stackoverflow.com/a/23842171/1748884">more discussion</a>.</p>
 
 <h2 align="center">
-<a id="--1" class="anchor" href="#--1" aria-hidden="true"><span class="octicon octicon-link"></span></a>
+<a id="--1" class="anchor" href="#--1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>
  <img src="http://i.imgur.com/rHWC1r1.png" alt="encodeuri or encodeuricomponent">
 </h2>
 
 <h3>
-<a id="you-might-not-need-jquery" class="anchor" href="#you-might-not-need-jquery" aria-hidden="true"><span class="octicon octicon-link"></span></a>YOU MIGHT NOT NEED JQUERY</h3>
+<a id="you-might-not-need-jquery" class="anchor" href="#you-might-not-need-jquery" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>YOU MIGHT NOT NEED JQUERY</h3>
 
 <p>As the title said, <a href="http://youmightnotneedjquery.com/">you might not need jquery</a>. It's really useful if you are looking for some utilities code - <a href="http://youmightnotneedjquery.com/#AJAX">AJAX</a> <a href="http://youmightnotneedjquery.com/#effects">EFFECTS</a>, <a href="http://youmightnotneedjquery.com/#elements">ELEMENTS</a>, <a href="http://youmightnotneedjquery.com/#events">EVENTS</a>, <a href="http://youmightnotneedjquery.com/#utils">UTILS</a></p>
 
 <h3>
-<a id="you-dont-need-jquery" class="anchor" href="#you-dont-need-jquery" aria-hidden="true"><span class="octicon octicon-link"></span></a>You Don't Need jQuery</h3>
+<a id="you-dont-need-jquery" class="anchor" href="#you-dont-need-jquery" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>You Don't Need jQuery</h3>
 
 <blockquote>
 <p>Free yourself from the chains of jQuery by embracing and understanding the modern Web API and discovering various directed libraries to help you fill in the gaps.</p>
@@ -1084,7 +1108,7 @@ These characters are: # $ &amp; + , / : ; = ? @ <a href="http://stackoverflow.co
 </ol>
 
 <h3>
-<a id="load-script-with-callback" class="anchor" href="#load-script-with-callback" aria-hidden="true"><span class="octicon octicon-link"></span></a>Load Script with Callback</h3>
+<a id="load-script-with-callback" class="anchor" href="#load-script-with-callback" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Load Script with Callback</h3>
 
 <p>It's similar to <a href="#asynchronous-syntax">asynchrnous script loading</a> with addition callback event</p>
 
@@ -1110,7 +1134,7 @@ These characters are: # $ &amp; + , / : ; = ? @ <a href="http://stackoverflow.co
 }</pre></div>
 
 <h3>
-<a id="once-function" class="anchor" href="#once-function" aria-hidden="true"><span class="octicon octicon-link"></span></a>Once Function</h3>
+<a id="once-function" class="anchor" href="#once-function" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Once Function</h3>
 
 <p>Here show how to implement the function <code>once</code></p>
 
@@ -1142,7 +1166,7 @@ These characters are: # $ &amp; + , / : ; = ? @ <a href="http://stackoverflow.co
 <span class="pl-en">canOnlyFireOnce</span>(); <span class="pl-c">// nada</span></pre></div>
 
 <h3>
-<a id="pixel-ratio-density" class="anchor" href="#pixel-ratio-density" aria-hidden="true"><span class="octicon octicon-link"></span></a>Pixel Ratio Density</h3>
+<a id="pixel-ratio-density" class="anchor" href="#pixel-ratio-density" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Pixel Ratio Density</h3>
 
 <p>If you stuck on the term pixel, ratio, density, dimension, what while developing mobile web, try understanding the video, it may help.</p>
 
@@ -1150,7 +1174,7 @@ These characters are: # $ &amp; + , / : ; = ? @ <a href="http://stackoverflow.co
 <a href="https://www.youtube.com/watch?t=34&amp;v=UUF4jD-xoYc">Mobile device pixels - Mobile Web Development</a></p>
 
 <h3>
-<a id="get-style-value" class="anchor" href="#get-style-value" aria-hidden="true"><span class="octicon octicon-link"></span></a>Get Style Value</h3>
+<a id="get-style-value" class="anchor" href="#get-style-value" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Get Style Value</h3>
 
 <p><strong>Get inline-style value</strong></p>
 
@@ -1180,7 +1204,7 @@ These characters are: # $ &amp; + , / : ; = ? @ <a href="http://stackoverflow.co
 <p>ref: <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/getComputedStyle">https://developer.mozilla.org/en-US/docs/Web/API/Window/getComputedStyle</a></p>
 
 <h3>
-<a id="check-if-element-in-viewport" class="anchor" href="#check-if-element-in-viewport" aria-hidden="true"><span class="octicon octicon-link"></span></a>Check if Element in Viewport</h3>
+<a id="check-if-element-in-viewport" class="anchor" href="#check-if-element-in-viewport" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Check if Element in Viewport</h3>
 
 <p>You can find out more <a href="http://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport/7557433#7557433">here</a>.</p>
 
@@ -1201,13 +1225,61 @@ These characters are: # $ &amp; + , / : ; = ? @ <a href="http://stackoverflow.co
     );
 }</pre></div>
 
+<h3>
+<a id="check-if-element-is-visible" class="anchor" href="#check-if-element-is-visible" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Check if Element is Visible</h3>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> <span class="pl-en">isVisible</span><span class="pl-k">:</span> <span class="pl-k">function</span>(<span class="pl-smi">b</span>) {
+    <span class="pl-k">var</span> a <span class="pl-k">=</span> <span class="pl-smi">window</span>.<span class="pl-en">getComputedStyle</span>(b);
+    <span class="pl-k">return</span> <span class="pl-c1">0</span> <span class="pl-k">===</span> <span class="pl-smi">a</span>.<span class="pl-en">getPropertyValue</span>(<span class="pl-s"><span class="pl-pds">"</span>opacity<span class="pl-pds">"</span></span>) <span class="pl-k">||</span> <span class="pl-s"><span class="pl-pds">"</span>none<span class="pl-pds">"</span></span> <span class="pl-k">===</span> <span class="pl-smi">a</span>.<span class="pl-en">getPropertyValue</span>(<span class="pl-s"><span class="pl-pds">"</span>display<span class="pl-pds">"</span></span>) <span class="pl-k">||</span> <span class="pl-s"><span class="pl-pds">"</span>hidden<span class="pl-pds">"</span></span> <span class="pl-k">===</span> <span class="pl-smi">a</span>.<span class="pl-en">getPropertyValue</span>(<span class="pl-s"><span class="pl-pds">"</span>visibility<span class="pl-pds">"</span></span>) <span class="pl-k">||</span> <span class="pl-c1">0</span> <span class="pl-k">===</span> <span class="pl-c1">parseInt</span>(<span class="pl-smi">b</span>.<span class="pl-c1">style</span>.<span class="pl-smi">opacity</span>, <span class="pl-c1">10</span>) <span class="pl-k">||</span> <span class="pl-s"><span class="pl-pds">"</span>none<span class="pl-pds">"</span></span> <span class="pl-k">===</span> <span class="pl-smi">b</span>.<span class="pl-c1">style</span>.<span class="pl-c1">display</span> <span class="pl-k">||</span> <span class="pl-s"><span class="pl-pds">"</span>hidden<span class="pl-pds">"</span></span> <span class="pl-k">===</span> <span class="pl-smi">b</span>.<span class="pl-c1">style</span>.<span class="pl-smi">visibility</span> <span class="pl-k">?</span> <span class="pl-c1">false</span> <span class="pl-k">:</span> <span class="pl-c1">true</span>;
+}
+
+<span class="pl-k">var</span> element <span class="pl-k">=</span> <span class="pl-smi">document</span>.<span class="pl-c1">getElementById</span>(<span class="pl-s"><span class="pl-pds">'</span>box<span class="pl-pds">'</span></span>);
+<span class="pl-en">isVisible</span>(element); <span class="pl-c">// =&gt; false or true</span></pre></div>
+
+<h3>
+<a id="get-viewport-size" class="anchor" href="#get-viewport-size" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Get Viewport Size</h3>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> <span class="pl-en">getViewportSize</span> <span class="pl-k">=</span> <span class="pl-k">function</span>() {
+    <span class="pl-k">try</span> {
+        <span class="pl-k">var</span> doc <span class="pl-k">=</span> <span class="pl-smi">top</span>.<span class="pl-smi">document</span>.<span class="pl-c1">documentElement</span>
+          , g <span class="pl-k">=</span> (e <span class="pl-k">=</span> <span class="pl-smi">top</span>.<span class="pl-smi">document</span>.<span class="pl-c1">body</span>) <span class="pl-k">&amp;&amp;</span> <span class="pl-smi">top</span>.<span class="pl-smi">document</span>.<span class="pl-smi">clientWidth</span> <span class="pl-k">&amp;&amp;</span> <span class="pl-smi">top</span>.<span class="pl-smi">document</span>.<span class="pl-smi">clientHeight</span>;
+    } <span class="pl-k">catch</span> (e) {
+        <span class="pl-k">var</span> doc <span class="pl-k">=</span> <span class="pl-smi">document</span>.<span class="pl-c1">documentElement</span>
+          , g <span class="pl-k">=</span> (e <span class="pl-k">=</span> <span class="pl-smi">document</span>.<span class="pl-c1">body</span>) <span class="pl-k">&amp;&amp;</span> <span class="pl-smi">document</span>.<span class="pl-smi">clientWidth</span> <span class="pl-k">&amp;&amp;</span> <span class="pl-smi">document</span>.<span class="pl-smi">clientHeight</span>;
+    }
+    <span class="pl-k">var</span> vp <span class="pl-k">=</span> [];
+    doc <span class="pl-k">&amp;&amp;</span> <span class="pl-smi">doc</span>.<span class="pl-smi">clientWidth</span> <span class="pl-k">&amp;&amp;</span> <span class="pl-smi">doc</span>.<span class="pl-smi">clientHeight</span> <span class="pl-k">&amp;&amp;</span> (<span class="pl-s"><span class="pl-pds">"</span>CSS1Compat<span class="pl-pds">"</span></span> <span class="pl-k">===</span> <span class="pl-smi">document</span>.<span class="pl-smi">compatMode</span> <span class="pl-k">||</span> <span class="pl-k">!</span>g) <span class="pl-k">?</span> vp <span class="pl-k">=</span> [<span class="pl-smi">doc</span>.<span class="pl-smi">clientWidth</span>, <span class="pl-smi">doc</span>.<span class="pl-smi">clientHeight</span>] <span class="pl-k">:</span> g <span class="pl-k">&amp;&amp;</span> (vp <span class="pl-k">=</span> [<span class="pl-smi">doc</span>.<span class="pl-smi">clientWidth</span>, <span class="pl-smi">doc</span>.<span class="pl-smi">clientHeight</span>]);
+    <span class="pl-k">return</span> vp;
+}
+
+<span class="pl-c">// return as rray [viewport_width, viewport_height]</span></pre></div>
+
 <h2>
-<a id="template" class="anchor" href="#template" aria-hidden="true"><span class="octicon octicon-link"></span></a>Template</h2>
+<a id="wtf" class="anchor" href="#wtf" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>WTF</h2>
+
+<h3>
+<a id="misspelling-of-referrer" class="anchor" href="#misspelling-of-referrer" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Misspelling Of Referrer</h3>
+
+<p>Do you know that why the HTTP Request Header having the field name <code>referer</code> not <code>referrer</code></p>
+
+<p><em>According to the <a href="https://en.wikipedia.org/wiki/HTTP_referer#Etymology">Wikipedia</a></em></p>
+
+<blockquote>
+<p>The <code>misspelling of referrer</code> originated in the original proposal by computer scientist <code>Phillip Hallam-Baker</code> to incorporate the field into the HTTP specification. The misspelling was set in stone by the time of its incorporation into the <code>Request for Comments</code> standards document <code>RFC 1945</code>; document co-author <code>Roy Fielding</code> has remarked that neither "referrer" nor the misspelling "referer" were recognized by the standard <code>Unix spell checker</code> of the period. "Referer" has since become a widely used spelling in the industry when discussing HTTP referrers; usage of the misspelling is not universal, though, as the correct spelling "referrer" is used in some web specifications such as the <code>Document Object Model</code>.</p>
+</blockquote>
+
+<h2 align="center">
+<a id="----" class="anchor" href="#----" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>
+    <img src="https://cloud.githubusercontent.com/assets/2560096/12190613/96a7d652-b605-11e5-8109-1c6fefa9dfc4.png">
+</h2>
+
+<h2>
+<a id="template" class="anchor" href="#template" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Template</h2>
 
 <p>Someone asks for the template/boilerplate of the SDK, here some example for you. <a href="https://github.com/huei90/JavaScript-sdk-design/blob/master/Template/README.md">TEMPLATE.md</a></p>
 
 <h2>
-<a id="booknice-to-read" class="anchor" href="#booknice-to-read" aria-hidden="true"><span class="octicon octicon-link"></span></a>Book/Nice to Read</h2>
+<a id="booknice-to-read" class="anchor" href="#booknice-to-read" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Book/Nice to Read</h2>
 
 <ol>
 <li><a href="http://thirdpartyjs.com">Third-Party JavaScript</a></li>
@@ -1216,7 +1288,7 @@ These characters are: # $ &amp; + , / : ; = ? @ <a href="http://stackoverflow.co
 </ol>
 
 <h2>
-<a id="reference" class="anchor" href="#reference" aria-hidden="true"><span class="octicon octicon-link"></span></a>Reference</h2>
+<a id="reference" class="anchor" href="#reference" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Reference</h2>
 
 <ol>
 <li><a href="http://www.webopedia.com/TERM/S/SDK.html">What is Software Development Kit</a></li>
