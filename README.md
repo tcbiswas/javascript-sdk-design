@@ -7,12 +7,11 @@ This guide gives you an introduction to developing a [JavaScript](https://develo
 Since I didn't find out a better documentation for the [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript) SDK,
 I'm here to gather and note down the knowledge of my personal experiences. **JavaScript-SDK-Design** is not just about SDK only, it's the connection between user and browser machine. The more native we write, the more we think, we do care about the performances and differences between platforms and browsers.
 
-Feel free to [edit](https://github.com/huei90/JavaScript-sdk-design/edit/master/README.md) or you can drop me suggestions on the [issue list](https://github.com/huei90/JavaScript-sdk-design/issues).
-
+Feel free to [edit](https://github.com/tcbiswas/JavaScript-sdk-design/edit/master/README.md) or you can drop me suggestions 
 <p align="right">
 <i>READ IT</i> 
 <a href="http://sdk-design.js.org" target="_blank">ONLINE</a> /
-<a href="https://gitprint.com/huei90/javascript-sdk-design/blob/master/README.md" target="_blank">PDF</a>
+<a href="https://gitprint.com/tcbiswas/javascript-sdk-design/blob/master/README.md" target="_blank">PDF</a>
 <i>OR</i> 
 <a href="http://ctt.ec/GyjRN" title="Click to Tweet">Tweet It</a> <br/>
 </p>
